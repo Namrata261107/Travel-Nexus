@@ -10,6 +10,9 @@ RUN apt-get update \
 
 WORKDIR /opt/deepface
 COPY deepface-master/requirements_local /opt/deepface/requirements_local.txt
+COPY deepface-master/requirements_base.txt /opt/deepface/requirements_base.txt
+COPY deepface-master/requirements_tf.txt /opt/deepface/requirements_tf.txt
+COPY deepface-master/requirements_pytorch.txt /opt/deepface/requirements_pytorch.txt
 COPY deepface-master/setup.py /opt/deepface/setup.py
 COPY deepface-master/package_info.json /opt/deepface/package_info.json
 COPY deepface-master/README.md /opt/deepface/README.md
