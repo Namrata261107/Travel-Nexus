@@ -95,16 +95,6 @@ urlpatterns = [
         name="face-cases",
     ),
     path(
-        "face/prepare/",
-        face_views.prepare_face_recognition,
-        name="face-prepare",
-    ),
-    path(
-        "face/recognize/",
-        face_views.face_recognition_scan,
-        name="face-recognize",
-    ),
-    path(
         "face/detections/",
         face_views.face_detections,
         name="face-detections",

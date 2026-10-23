@@ -47,7 +47,7 @@
       <div>
         <p class="face-section-eyebrow">FACE REPORTS</p>
         <h1>Face Recognition &amp; Case Reports</h1>
-        <p>Create a person report, then start the camera to look for potential matches. Matches are leads for human review, not proof of identity.</p>
+        <p>Create a person report, then start the camera to look for potential matches. Face matching runs in this browser; results are leads for human review, not proof of identity.</p>
       </div>
     </section>
 
@@ -63,7 +63,7 @@
       </div>
       <div class="live-camera-controls">
         <p class="live-camera-notice">
-          Hold a potential match in view for about 3 seconds. The frame, report details, date/time, and available location are saved for authority review.
+          Camera frames and reference photos are compared in this browser. Only a potential match held in view for about 3 seconds is uploaded with the report and available location for authority review.
         </p>
         <button type="button" class="button button-primary live-camera-button" id="toggleCameraBtn">
           <i class="fa-solid fa-video"></i><span>Start Camera</span>
@@ -111,7 +111,7 @@
           <div>
             <p class="face-section-eyebrow">REGISTERED REFERENCE REPORTS</p>
             <h2>Reports Used for Matching</h2>
-            <p>These reports are stored in the database and prepared for matching when you start the camera.</p>
+            <p>These reports are stored in the database. Their reference photos are loaded into this browser when matching starts.</p>
           </div>
           <button type="button" class="button button-outline face-refresh-button" id="refreshFaceDataBtn">
             <i class="fa-solid fa-rotate"></i><span>Refresh</span>
@@ -143,7 +143,7 @@
     window.travelNexusAuthReady.then(authenticated => {
       if (!authenticated) return;
       const script = document.createElement("script");
-      script.src = "../js/face-recognition.js?v=face-auth-1";
+      script.src = "../js/face-recognition.js?v=browser-matching-1";
       document.body.appendChild(script);
     });
   </script>

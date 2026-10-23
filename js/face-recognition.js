@@ -3,6 +3,11 @@
 const API_BASE = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/face";
 const FRAME_INTERVAL_MS = 1800;
 const MAX_FRAME_WIDTH = 960;
+const MATCH_DISTANCE_THRESHOLD = 0.5;
+const MATCH_CONFIRMATION_MS = 3000;
+const DETECTION_COOLDOWN_MS = 45000;
+const FACE_API_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.js";
+const FACE_MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model";
 
 const video = document.getElementById("cameraVideo");
 const panel = document.getElementById("liveCameraPanel");
@@ -20,12 +25,17 @@ const detectionsStatus = document.getElementById("faceDetectionsStatus");
 const state = {
   stream: null,
   timer: null,
-  request: null,
   isStarting: false,
   isScanning: false,
   location: null,
   locationRequested: false,
-  notifiedMatchId: null
+  notifiedMatchId: null,
+  reports: [],
+  referenceDescriptors: [],
+  matchSince: null,
+  lastCapturedAt: new Map(),
+  faceApiReady: false,
+  isRecognizing: false
 };
 
 toggleButton.addEventListener("click", () => {
@@ -77,7 +87,8 @@ async function loadCases() {
   casesStatus.textContent = "Loading reports...";
   try {
     const data = await apiFetch("/cases/");
-    await renderCases(data.cases || []);
+    state.reports = data.cases || [];
+    await renderCases(state.reports);
   } catch (error) {
     casesStatus.textContent = error.message;
     casesGrid.replaceChildren();
@@ -221,26 +232,26 @@ async function startCamera() {
     placeholder.hidden = true;
     setButtonState("Stop Camera", false, true);
     requestCameraLocation();
-    setCameraStatus("Preparing registered reports for recognition...");
-
-    const data = await apiFetch("/prepare/", { method: "POST" });
+    if (!state.reports.length) {
+      setCameraStatus("No active person reports. Stop the camera and create a report first.");
+      return;
+    }
+    setCameraStatus("Loading the browser recognition model...");
+    await loadFaceApi();
     if (!state.stream) return;
-    const rejected = Array.isArray(data.rejected_cases) ? data.rejected_cases : [];
-    if (data.registered_cases < 1) {
-      setCameraStatus(
-        rejected.length
-          ? `No reference photos could be prepared: ${rejected.map(item => item.reason).join(" ")}`
-          : "No valid person reports are registered. Stop the camera and create a report first."
-      );
+    setCameraStatus("Preparing reference photos in this browser...");
+    await prepareReferenceDescriptors();
+    if (!state.stream) return;
+    if (!state.referenceDescriptors.length) {
+      setCameraStatus("No reference photos contain one detectable face. Add clear, front-facing photos and try again.");
       return;
     }
     state.isScanning = true;
-    const rejectedMessage = rejected.length
-      ? ` ${rejected.length} reference photo(s) could not be used.`
-      : "";
+    const skipped = state.reports.length - state.referenceDescriptors.length;
     setCameraStatus(
-      `Camera is live. ${data.registered_cases} report(s) ready. ` +
-      `A potential match must remain visible for about 3 seconds.${rejectedMessage}`
+      `Camera is live. ${state.referenceDescriptors.length} reference photo(s) ready. ` +
+      (skipped ? `${skipped} photo(s) were skipped. ` : "") +
+      "Matching runs in this browser; a potential match must remain visible for about 3 seconds."
     );
     scanFrame();
   } catch (error) {
@@ -255,12 +266,10 @@ async function startCamera() {
 function stopCamera() {
   state.isStarting = false;
   state.isScanning = false;
+  state.matchSince = null;
+  state.isRecognizing = false;
   window.clearTimeout(state.timer);
   state.timer = null;
-  if (state.request) {
-    state.request.abort();
-    state.request = null;
-  }
   if (state.stream) state.stream.getTracks().forEach(track => track.stop());
   state.stream = null;
   video.pause();
@@ -269,102 +278,150 @@ function stopCamera() {
   document.body.classList.remove("camera-is-live");
   placeholder.hidden = false;
   setButtonState("Start Camera", false);
-  setCameraStatus("Camera is off. No further frames are being sent.");
+  setCameraStatus("Camera is off. Matching has stopped.");
 }
 
 async function scanFrame() {
-  if (!state.isScanning || !state.stream || state.request) return;
+  if (!state.isScanning || !state.stream || state.isRecognizing) return;
   if (!video.videoWidth || !video.videoHeight) {
     state.timer = window.setTimeout(scanFrame, FRAME_INTERVAL_MS);
     return;
   }
 
+  state.isRecognizing = true;
+  try {
+    const faces = await window.faceapi
+      .detectAllFaces(video, new window.faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.55 }))
+      .withFaceLandmarks(true)
+      .withFaceDescriptors();
+    if (!state.isScanning) return;
+    const match = findBestMatch(faces);
+    if (!match) {
+      state.matchSince = null;
+      state.notifiedMatchId = null;
+      setCameraStatus(faces.length ? "No active report matched the face in view." : "Camera is live. No face detected in this frame.");
+      return;
+    }
+    await handleBrowserMatch(match);
+  } catch (error) {
+    if (state.isScanning) setCameraStatus(`Browser matching error: ${error.message}`);
+  } finally {
+    state.isRecognizing = false;
+    if (state.isScanning) state.timer = window.setTimeout(scanFrame, FRAME_INTERVAL_MS);
+  }
+}
+
+async function loadFaceApi() {
+  if (state.faceApiReady) return;
+  if (!window.faceapi) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = FACE_API_URL;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error("Could not download the browser recognition library. Check your internet connection."));
+      document.head.appendChild(script);
+    });
+  }
+  await Promise.all([
+    window.faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODEL_URL),
+    window.faceapi.nets.faceLandmark68TinyNet.loadFromUri(FACE_MODEL_URL),
+    window.faceapi.nets.faceRecognitionNet.loadFromUri(FACE_MODEL_URL)
+  ]);
+  state.faceApiReady = true;
+}
+
+async function prepareReferenceDescriptors() {
+  state.referenceDescriptors = [];
+  for (const report of state.reports) {
+    if (!report.is_active) continue;
+    let objectUrl;
+    try {
+      objectUrl = await privatePhotoUrl(report.reference_photo);
+      const image = new Image();
+      image.src = objectUrl;
+      await image.decode();
+      const faces = await window.faceapi
+        .detectAllFaces(image, new window.faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 }))
+        .withFaceLandmarks(true)
+        .withFaceDescriptors();
+      if (faces.length === 1) state.referenceDescriptors.push({ report, descriptor: faces[0].descriptor });
+    } catch (error) {
+      console.warn(`Could not prepare reference photo for report ${report.id}:`, error);
+    } finally {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    }
+  }
+}
+
+function findBestMatch(faces) {
+  let best = null;
+  for (const face of faces) {
+    for (const reference of state.referenceDescriptors) {
+      const distance = window.faceapi.euclideanDistance(face.descriptor, reference.descriptor);
+      if (distance <= MATCH_DISTANCE_THRESHOLD && (!best || distance < best.distance)) {
+        best = { report: reference.report, distance };
+      }
+    }
+  }
+  if (!best) return null;
+  best.similarity = Math.max(0, Math.min(1, 1 - best.distance));
+  return best;
+}
+
+async function handleBrowserMatch(match) {
+  const reportId = String(match.report.id);
+  const now = Date.now();
+  if (!state.matchSince || state.matchSince.reportId !== reportId) {
+    state.matchSince = { reportId, since: now };
+  }
+  if (state.notifiedMatchId !== reportId) {
+    state.notifiedMatchId = reportId;
+    showRecognitionPopup(
+      "Potential match detected",
+      `${match.report.name} — ${match.report.report_type_label}. Automated recognition can be wrong; verify independently.`
+    );
+  }
+  const remaining = Math.max(0, MATCH_CONFIRMATION_MS - (now - state.matchSince.since));
+  if (remaining > 0) {
+    setCameraStatus(`Potential match: ${match.report.name}. Keep the face in view for ${Math.ceil(remaining / 1000)} more second(s).`);
+    return;
+  }
+  const lastCaptured = state.lastCapturedAt.get(reportId) || 0;
+  if (now - lastCaptured < DETECTION_COOLDOWN_MS) {
+    setCameraStatus(`Potential match: ${match.report.name}. A capture was already saved recently.`);
+    return;
+  }
+
+  setCameraStatus(`Saving a potential match for ${match.report.name} for human review...`);
   const canvas = document.createElement("canvas");
   const scale = Math.min(1, MAX_FRAME_WIDTH / video.videoWidth);
   canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
   canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
   const context = canvas.getContext("2d");
-  if (!context) {
-    setCameraStatus("Unable to prepare a camera frame.");
-    state.timer = window.setTimeout(scanFrame, FRAME_INTERVAL_MS);
-    return;
-  }
+  if (!context) throw new Error("Unable to capture a camera image.");
   context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
+  const imageBlob = await new Promise((resolve, reject) => {
+    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Unable to capture a camera image.")), "image/jpeg", 0.82);
+  });
+  const formData = new FormData();
+  formData.append("report_id", match.report.id);
+  formData.append("similarity_score", match.similarity.toFixed(4));
+  formData.append("image", imageBlob, "browser-capture.jpg");
+  if (state.location) {
+    formData.append("latitude", state.location.latitude);
+    formData.append("longitude", state.location.longitude);
+  }
   try {
-    const frame = await new Promise((resolve, reject) => {
-      canvas.toBlob(blob => {
-        if (blob) resolve(blob);
-        else reject(new Error("Unable to capture a camera frame."));
-      }, "image/jpeg", 0.82);
-    });
-    if (!state.isScanning) return;
-
-    const controller = new AbortController();
-    state.request = controller;
-    const formData = new FormData();
-    formData.append("image", frame, "camera-frame.jpg");
-    if (state.location) {
-      formData.append("latitude", state.location.latitude);
-      formData.append("longitude", state.location.longitude);
-    }
-
-    const data = await apiFetch("/recognize/", {
-      method: "POST",
-      body: formData,
-      signal: controller.signal
-    });
-    if (!state.isScanning) return;
-    handleRecognitionResult(data);
-  } catch (error) {
-    if (error.name !== "AbortError" && state.isScanning) {
-      setCameraStatus(error.message);
-    }
-  } finally {
-    state.request = null;
-    if (state.isScanning) {
-      state.timer = window.setTimeout(scanFrame, FRAME_INTERVAL_MS);
-    }
-  }
-}
-
-function handleRecognitionResult(data) {
-  if (!data.match) {
-    state.notifiedMatchId = null;
-    setCameraStatus(data.message || "Camera is live. No potential match in this frame.");
-    return;
-  }
-  const reportId = String(data.match.id);
-  const score = Number(data.similarity_score);
-  const similarity = Number.isFinite(score)
-    ? ` Embedding similarity: ${Math.round(score * 100)}%.`
-    : "";
-  if (data.detection) {
-    setCameraStatus(
-      `Potential match captured for ${data.match.name} (${data.match.report_type_label}).` +
-      `${similarity} Saved for human review.`
-    );
-    showRecognitionPopup(
-      "Potential match captured",
-      `${data.match.name} — ${data.match.report_type_label}. Saved to detections for review. This is not a confirmed identity.`
-    );
-    state.notifiedMatchId = reportId;
+    await apiFetch("/detections/", { method: "POST", body: formData });
+    state.lastCapturedAt.set(reportId, Date.now());
+    setCameraStatus(`Potential match captured for ${match.report.name}. Saved for human review; this is not a confirmed identity.`);
+    showRecognitionPopup("Potential match captured", `${match.report.name} — saved for human review. Verify independently.`);
     loadDetections();
-  } else {
-    setCameraStatus(
-      `Potential match: ${data.match.name} (${data.match.report_type_label}).` +
-      `${similarity} Keep the person in view for about 3 seconds.`
-    );
-    if (state.notifiedMatchId !== reportId) {
-      showRecognitionPopup(
-        "Potential match detected",
-        `${data.match.name} — ${data.match.report_type_label}. Keep the person in view to save a capture. Please verify the result; automated recognition can be wrong.`
-      );
-      state.notifiedMatchId = reportId;
-    }
+  } catch (error) {
+    state.matchSince = { reportId, since: Date.now() - MATCH_CONFIRMATION_MS };
+    setCameraStatus(error.message);
   }
 }
-
 function showRecognitionPopup(title, message) {
   let container = document.getElementById("faceRecognitionToasts");
   if (!container) {
