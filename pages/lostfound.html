@@ -1,0 +1,331 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Nexus | Lost & Found</title>
+
+  <link rel="stylesheet" href="../css/lostfound.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+  <link rel="stylesheet" href="../css/notifications.css?v=1">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body data-required-role="authority">
+  <div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+                <strong>Travel Nexus</strong>
+                <small>Authority Command Center</small>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <button class="icon-button" id="notificationBtn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Authority Admin</strong>
+                    <small>Administrator</small>
+                </span>
+            </div>
+        </div>
+    </header>
+
+  <!-- Horizontal navigation only: no sidebar -->
+  <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link active"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+  <main class="main-content">
+    <section class="welcome-section">
+      <div>
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span>
+          TRAVELER ASSISTANCE
+        </div>
+        <h1>Lost &amp; Found <span class="title-icon">✦</span></h1>
+        <p class="page-description">
+          Manage lost belongings, found items, and recovery requests in one place.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-light" id="exportButton" type="button">
+          <i class="fa-solid fa-download"></i> Export CSV
+        </button>
+        <button class="btn btn-primary" id="addItemButton" type="button">
+          <i class="fa-solid fa-plus"></i> Report an Item
+        </button>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="Lost and found statistics">
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Total Reports</span>
+          <span class="stat-icon purple"><i class="fa-solid fa-clipboard-list"></i></span>
+        </div>
+        <div class="stat-value" id="totalReports">0</div>
+        <p class="stat-note">All registered items</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Lost Items</span>
+          <span class="stat-icon orange"><i class="fa-solid fa-magnifying-glass"></i></span>
+        </div>
+        <div class="stat-value" id="lostCount">0</div>
+        <p class="stat-note">Items reported missing</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Found Items</span>
+          <span class="stat-icon blue"><i class="fa-solid fa-box-open"></i></span>
+        </div>
+        <div class="stat-value" id="foundCount">0</div>
+        <p class="stat-note">Items reported found</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Resolved</span>
+          <span class="stat-icon green"><i class="fa-solid fa-circle-check"></i></span>
+        </div>
+        <div class="stat-value" id="resolvedCount">0</div>
+        <p class="stat-note">Successfully returned or closed</p>
+      </article>
+    </section>
+
+    <section class="workspace">
+      <div class="section-heading">
+        <div>
+          <h2>Item Management</h2>
+          <p>Search, filter, and manage reported belongings.</p>
+        </div>
+        <span class="live-label"><span class="status-dot"></span> Live workspace</span>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="searchInput" type="search"
+                 placeholder="Search item, location, reporter..."
+                 aria-label="Search reported items">
+          <kbd>/</kbd>
+        </label>
+
+        <label class="select-wrap">
+          <i class="fa-solid fa-filter"></i>
+          <select id="typeFilter" aria-label="Filter by item type">
+            <option value="all">All item types</option>
+            <option value="Lost">Lost items</option>
+            <option value="Found">Found items</option>
+          </select>
+        </label>
+
+        <label class="select-wrap">
+          <i class="fa-solid fa-list-check"></i>
+          <select id="statusFilter" aria-label="Filter by status">
+            <option value="all">All statuses</option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="category-row">
+        <span class="category-label">QUICK CATEGORIES</span>
+        <div class="category-chips" id="categoryChips">
+          <button class="category-chip active" data-category="all" type="button">
+            <i class="fa-solid fa-border-all"></i> All items
+          </button>
+          <button class="category-chip" data-category="Electronics" type="button">
+            <i class="fa-solid fa-mobile-screen"></i> Electronics
+          </button>
+          <button class="category-chip" data-category="Bags" type="button">
+            <i class="fa-solid fa-bag-shopping"></i> Bags
+          </button>
+          <button class="category-chip" data-category="Documents" type="button">
+            <i class="fa-solid fa-file-lines"></i> Documents
+          </button>
+          <button class="category-chip" data-category="Accessories" type="button">
+            <i class="fa-solid fa-glasses"></i> Accessories
+          </button>
+          <button class="category-chip" data-category="Other" type="button">
+            <i class="fa-solid fa-ellipsis"></i> Other
+          </button>
+        </div>
+      </div>
+
+      <div class="results-heading">
+        <div>
+          <h3>Reported Items</h3>
+          <p id="resultsText">Showing all items</p>
+        </div>
+        <button class="text-button" id="resetFiltersButton" type="button">
+          <i class="fa-solid fa-rotate-left"></i> Reset filters
+        </button>
+      </div>
+
+      <div class="items-grid" id="itemsGrid"></div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
+        <h3>No items found</h3>
+        <p>Try changing your filters or report a new item.</p>
+        <button class="btn btn-primary" id="emptyAddButton" type="button">
+          <i class="fa-solid fa-plus"></i> Report an Item
+        </button>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span><i class="fa-solid fa-shield-halved"></i> Travel Nexus Authority Portal</span>
+      <span>Lost &amp; Found Management</span>
+    </footer>
+  </main>
+
+  <!-- Add / edit item modal -->
+  <div class="modal-backdrop" id="itemModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true"
+             aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <span class="modal-eyebrow">ITEM REGISTRATION</span>
+          <h2 id="modalTitle">Report an Item</h2>
+          <p>Add the details to the lost and found register.</p>
+        </div>
+        <button class="icon-button close-modal" data-close-modal
+                type="button" aria-label="Close form">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="itemForm">
+        <input id="editItemId" type="hidden">
+
+        <div class="form-grid">
+          <label class="form-field full-width">
+            Item name *
+            <input id="itemName" name="itemName" required maxlength="100"
+                   placeholder="e.g. Black backpack">
+          </label>
+
+          <label class="form-field">
+            Report type *
+            <select id="itemType" name="itemType" required>
+              <option value="Lost">Lost item</option>
+              <option value="Found">Found item</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            Category *
+            <select id="itemCategory" name="itemCategory" required>
+              <option value="Electronics">Electronics</option>
+              <option value="Bags">Bags</option>
+              <option value="Documents">Documents</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label class="form-field full-width">
+            Location *
+            <input id="itemLocation" name="itemLocation" required maxlength="150"
+                   placeholder="e.g. Railway station, platform 2">
+          </label>
+
+          <label class="form-field">
+            Reporter name *
+            <input id="reporterName" name="reporterName" required maxlength="100"
+                   placeholder="Enter reporter name">
+          </label>
+
+          <label class="form-field">
+            Report date *
+            <input id="reportDate" name="reportDate" type="date" required>
+          </label>
+
+          <label class="form-field">
+            Reference / contact (optional)
+            <input id="itemReference" name="itemReference" maxlength="100"
+                   placeholder="Optional reference">
+          </label>
+
+          <label class="form-field full-width">
+            Description
+            <textarea id="itemDescription" name="itemDescription" rows="3"
+                      maxlength="500"
+                      placeholder="Describe the item, colour, brand, or identifying details..."></textarea>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-light" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit" id="saveItemButton">
+            <i class="fa-solid fa-check"></i> Save Report
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Item details modal -->
+  <div class="modal-backdrop" id="detailsModal" hidden>
+    <section class="modal details-modal" role="dialog" aria-modal="true"
+             aria-labelledby="detailsTitle">
+      <div class="modal-header">
+        <div>
+          <span class="modal-eyebrow">REPORT DETAILS</span>
+          <h2 id="detailsTitle">Item Details</h2>
+          <p>Review the information for this report.</p>
+        </div>
+        <button class="icon-button close-modal" data-close-modal
+                type="button" aria-label="Close details">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="detailsContent" class="details-content"></div>
+      <div class="modal-actions">
+        <button class="btn btn-light" type="button" data-close-modal>Close</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../Traveller_Module/js/supabase-client.js"></script>
+<script>window.initializeSupabaseClient();</script>
+<script src="../js/dashboard-auth.js"></script>
+<script src="../js/notifications.js?v=1"></script>
+<script src="../js/lostfound.js?v=shared-reports-3"></script>
+
+</body>
+</html>

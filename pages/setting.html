@@ -1,0 +1,458 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Nexus | Settings</title>
+
+   <link rel="stylesheet" href="../css/setting.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+    <link rel="stylesheet" href="../css/notifications.css?v=1">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+                <strong>Travel Nexus</strong>
+                <small>Authority Command Center</small>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <button class="icon-button" id="notificationBtn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Authority Admin</strong>
+                    <small>Administrator</small>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link active" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+
+    <main class="page-content">
+
+        <!-- PAGE INTRO -->
+        <section class="page-heading">
+            <div>
+                <div class="eyebrow"><i class="fa-solid fa-sliders"></i> CONTROL CENTER</div>
+                <h1>Settings <span class="heading-sparkle">✦</span></h1>
+                <p>Personalize your workspace, manage preferences, and keep your command center working your way.</p>
+            </div>
+            <div class="heading-actions">
+                <span class="saved-indicator" id="saveIndicator">
+                    <i class="fa-solid fa-circle-check"></i> All changes saved
+                </span>
+                <button class="button button-primary" id="saveAllBtn">
+                    <i class="fa-solid fa-check"></i> Save changes
+                </button>
+            </div>
+        </section>
+
+        <!-- HERO BANNER -->
+        <section class="settings-hero">
+            <div class="hero-content">
+                <div class="hero-label"><i class="fa-solid fa-wand-magic-sparkles"></i> YOUR WORKSPACE, YOUR WAY</div>
+                <h2>Everything in one place.</h2>
+                <p>Fine-tune your Travel Nexus experience with simple, flexible controls.</p>
+                <div class="hero-tags">
+                    <span><i class="fa-solid fa-shield-halved"></i> Security first</span>
+                    <span><i class="fa-solid fa-bolt"></i> Quick controls</span>
+                    <span><i class="fa-solid fa-user-gear"></i> Personalized</span>
+                </div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+                <div class="orbit orbit-one"></div>
+                <div class="orbit orbit-two"></div>
+                <div class="hero-gear"><i class="fa-solid fa-gears"></i></div>
+                <span class="floating-icon float-one"><i class="fa-solid fa-shield-halved"></i></span>
+                <span class="floating-icon float-two"><i class="fa-solid fa-bell"></i></span>
+                <span class="floating-icon float-three"><i class="fa-solid fa-palette"></i></span>
+            </div>
+        </section>
+
+        <!-- SETTINGS LAYOUT -->
+        <div class="settings-layout">
+
+            <!-- SETTINGS CATEGORY MENU -->
+            <aside class="settings-sidebar">
+                <div class="sidebar-heading">PREFERENCES</div>
+                <button class="settings-tab active" data-target="profileSection">
+                    <span class="tab-icon purple"><i class="fa-regular fa-user"></i></span>
+                    <span><strong>My Profile</strong><small>Personal information</small></span>
+                    <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                </button>
+                <button class="settings-tab" data-target="appearanceSection">
+                    <span class="tab-icon orange"><i class="fa-solid fa-palette"></i></span>
+                    <span><strong>Appearance</strong><small>Theme and colors</small></span>
+                    <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                </button>
+                <button class="settings-tab" data-target="notificationSection">
+                    <span class="tab-icon blue"><i class="fa-regular fa-bell"></i></span>
+                    <span><strong>Notifications</strong><small>Alerts and updates</small></span>
+                    <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                </button>
+                <button class="settings-tab" data-target="securitySection">
+                    <span class="tab-icon green"><i class="fa-solid fa-shield-halved"></i></span>
+                    <span><strong>Security</strong><small>Account protection</small></span>
+                    <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                </button>
+                <button class="settings-tab" data-target="systemSection">
+                    <span class="tab-icon pink"><i class="fa-solid fa-sliders"></i></span>
+                    <span><strong>System</strong><small>Regional preferences</small></span>
+                    <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                </button>
+
+                <div class="sidebar-help">
+                    <span class="help-icon"><i class="fa-regular fa-circle-question"></i></span>
+                    <strong>Need a hand?</strong>
+                    <p>Manage your workspace settings with confidence.</p>
+                    <a href="assistant.html">Ask AI Assistant <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </aside>
+
+            <!-- SETTINGS PANELS -->
+            <div class="settings-panels">
+
+                <!-- PROFILE -->
+                <section class="settings-card settings-section" id="profileSection">
+                    <div class="card-heading">
+                        <div class="section-icon purple"><i class="fa-regular fa-user"></i></div>
+                        <div>
+                            <h2>Personal Profile</h2>
+                            <p>Update the information associated with your administrator profile.</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-banner">
+                        <div class="profile-avatar" id="profileAvatar">A</div>
+                        <div class="profile-info">
+                            <h3 id="profileDisplayName">Authority Admin</h3>
+                            <p id="profileDisplayEmail">admin@travelnexus.demo</p>
+                            <span class="role-badge"><i class="fa-solid fa-shield-halved"></i> Administrator</span>
+                        </div>
+                        <button class="button button-outline button-small" id="editProfileBtn">
+                            <i class="fa-solid fa-pen"></i> Edit profile
+                        </button>
+                    </div>
+
+                    <form id="profileForm">
+                        <div class="form-grid">
+                            <label class="form-field">
+                                <span>Full name</span>
+                                <input type="text" id="fullName" value="Authority Admin" maxlength="80" required>
+                            </label>
+                            <label class="form-field">
+                                <span>Email address</span>
+                                <input type="email" id="emailAddress" value="admin@travelnexus.demo" required>
+                            </label>
+                            <label class="form-field">
+                                <span>Phone number</span>
+                                <input type="tel" id="phoneNumber" placeholder="Enter phone number" maxlength="20">
+                            </label>
+                            <label class="form-field">
+                                <span>Job title</span>
+                                <input type="text" id="jobTitle" value="Authority Administrator" maxlength="80">
+                            </label>
+                        </div>
+                        <p class="field-note"><i class="fa-solid fa-circle-info"></i> These are demo profile details for this browser.</p>
+                    </form>
+                </section>
+
+                <!-- APPEARANCE -->
+                <section class="settings-card settings-section" id="appearanceSection">
+                    <div class="card-heading">
+                        <div class="section-icon orange"><i class="fa-solid fa-palette"></i></div>
+                        <div>
+                            <h2>Appearance &amp; Theme</h2>
+                            <p>Choose a comfortable look for your workspace.</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-row theme-row">
+                        <div class="setting-description">
+                            <strong>Interface theme</strong>
+                            <p>Switch between light and dark appearance.</p>
+                        </div>
+                        <div class="theme-options">
+                            <button class="theme-choice active" data-theme="light" aria-pressed="true">
+                                <span class="theme-preview light-preview"><i class="fa-solid fa-sun"></i></span>
+                                <span>Light</span>
+                            </button>
+                            <button class="theme-choice" data-theme="dark" aria-pressed="false">
+                                <span class="theme-preview dark-preview"><i class="fa-solid fa-moon"></i></span>
+                                <span>Dark</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Accent color</strong>
+                            <p>Choose your preferred highlight color.</p>
+                        </div>
+                        <div class="color-options" role="group" aria-label="Accent color">
+                            <button class="color-choice selected" data-color="#6558e8" style="--swatch:#6558e8" aria-label="Purple" aria-pressed="true"></button>
+                            <button class="color-choice" data-color="#1687f8" style="--swatch:#1687f8" aria-label="Blue" aria-pressed="false"></button>
+                            <button class="color-choice" data-color="#0caa83" style="--swatch:#0caa83" aria-label="Green" aria-pressed="false"></button>
+                            <button class="color-choice" data-color="#e76b42" style="--swatch:#e76b42" aria-label="Orange" aria-pressed="false"></button>
+                            <button class="color-choice" data-color="#d94c90" style="--swatch:#d94c90" aria-label="Pink" aria-pressed="false"></button>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Compact interface</strong>
+                            <p>Reduce spacing to fit more information on screen.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="compactMode">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- NOTIFICATIONS -->
+                <section class="settings-card settings-section" id="notificationSection">
+                    <div class="card-heading">
+                        <div class="section-icon blue"><i class="fa-regular fa-bell"></i></div>
+                        <div>
+                            <h2>Notification Preferences</h2>
+                            <p>Choose which updates you want to see in this interface.</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Emergency alerts</strong>
+                            <p>Show high-priority emergency notifications.</p>
+                            <span class="inline-label urgent-label">High priority</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="emergencyNotifications" checked>
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Traveler activity</strong>
+                            <p>Updates about traveler movement and status.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="travelerNotifications" checked>
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Geofence notifications</strong>
+                            <p>Show configured zone entry and exit updates.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="geofenceNotifications" checked>
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>System updates</strong>
+                            <p>Inform me about system and maintenance messages.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="systemNotifications">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- SECURITY -->
+                <section class="settings-card settings-section" id="securitySection">
+                    <div class="card-heading">
+                        <div class="section-icon green"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h2>Security &amp; Privacy</h2>
+                            <p>Manage local interface security preferences.</p>
+                        </div>
+                    </div>
+
+                    <div class="security-callout">
+                        <span class="security-shield"><i class="fa-solid fa-shield-heart"></i></span>
+                        <div>
+                            <strong>Protect your account</strong>
+                            <p>Use strong passwords and secure your administrator account.</p>
+                        </div>
+                        <span class="security-status">Best practice</span>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Two-factor authentication</strong>
+                            <p>Demo preference only; this does not enable server-side authentication.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="twoFactorAuth">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Automatic session reminder</strong>
+                            <p>Show a reminder to secure your session before leaving.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="sessionReminder" checked>
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="password-area">
+                        <div>
+                            <strong>Change password</strong>
+                            <p>Password updates require a real authentication backend.</p>
+                        </div>
+                        <button class="button button-outline" id="changePasswordBtn">
+                            <i class="fa-solid fa-key"></i> Password guidance
+                        </button>
+                    </div>
+                </section>
+
+                <!-- SYSTEM -->
+                <section class="settings-card settings-section" id="systemSection">
+                    <div class="card-heading">
+                        <div class="section-icon pink"><i class="fa-solid fa-sliders"></i></div>
+                        <div>
+                            <h2>System Preferences</h2>
+                            <p>Set regional and workspace preferences.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <label class="form-field">
+                            <span>Language</span>
+                            <select id="languageSelect">
+                                <option value="en">English</option>
+                                <option value="mr">मराठी (Marathi)</option>
+                                <option value="hi">हिन्दी (Hindi)</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span>Time zone</span>
+                            <select id="timezoneSelect">
+                                <option value="Asia/Kolkata">India Standard Time (IST)</option>
+                                <option value="UTC">Coordinated Universal Time (UTC)</option>
+                                <option value="Europe/London">London</option>
+                                <option value="America/New_York">New York</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span>Date format</span>
+                            <select id="dateFormat">
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span>Default dashboard</span>
+                            <select id="defaultDashboard">
+                                <option value="authority.html">Authority Dashboard</option>
+                                <option value="alerts.html">Emergency Alerts</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <strong>Confirm before resetting preferences</strong>
+                            <p>Ask before restoring default settings.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="confirmReset" checked>
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- DANGER ZONE -->
+                <section class="settings-card danger-card">
+                    <div class="danger-heading">
+                        <span class="danger-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                        <div>
+                            <h2>Reset Preferences</h2>
+                            <p>Restore this page's saved demo preferences to their defaults.</p>
+                        </div>
+                    </div>
+                    <button class="button button-danger" id="resetSettingsBtn">
+                        <i class="fa-solid fa-rotate-left"></i> Reset all settings
+                    </button>
+                </section>
+
+                <div class="bottom-actions">
+                    <span><i class="fa-solid fa-lock"></i> Preferences are saved in this browser only.</span>
+                    <div>
+                        <button class="button button-outline" id="discardChangesBtn">Discard changes</button>
+                        <button class="button button-primary" id="bottomSaveBtn"><i class="fa-solid fa-check"></i> Save changes</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="page-footer">
+            <span>© 2026 Travel Nexus · Authority Command Center</span>
+            <span><span class="online-dot"></span> All systems operational <span class="footer-divider">·</span> Settings v1.0</span>
+        </footer>
+    </main>
+</div>
+
+<!-- TOAST NOTIFICATIONS -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<!-- RESET CONFIRMATION MODAL -->
+<div class="modal-backdrop" id="resetModal" hidden>
+    <div class="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+        <div class="modal-icon"><i class="fa-solid fa-rotate-left"></i></div>
+        <h2 id="resetModalTitle">Reset your settings?</h2>
+        <p>This will restore the default appearance and preference values saved by this demo.</p>
+        <div class="modal-actions">
+            <button class="button button-outline" id="cancelResetBtn">Cancel</button>
+            <button class="button button-danger" id="confirmResetBtn">Yes, reset</button>
+        </div>
+    </div>
+</div>
+
+<script src="../js/notifications.js?v=1"></script>
+<script src="../js/setting.js"></script>
+</body>
+</html>

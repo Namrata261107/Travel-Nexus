@@ -1,0 +1,473 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101827">
+
+    <title>Travel Nexus | Emergency Alerts</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="../css/alerts.css">
+    <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+    <link rel="stylesheet" href="../css/notifications.css?v=1">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+                <strong>Travel Nexus</strong>
+                <small>Authority Command Center</small>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <button class="icon-button" id="notificationBtn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Authority Admin</strong>
+                    <small>Administrator</small>
+                </span>
+            </div>
+        </div>
+    </header>
+    <!-- ================= NAVIGATION ================= -->
+ <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link active"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+
+   
+
+   
+
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="page-container">
+
+        <section class="page-heading">
+            <div class="heading-copy">
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    AUTHORITY CONTROL CENTER
+                </div>
+
+                <h2>Emergency Alerts <span class="heading-period">.</span></h2>
+
+                <p>Monitor incidents, coordinate responses, and keep travelers safe.</p>
+            </div>
+
+            <div class="heading-actions">
+                <div class="live-pill">
+                    <span class="live-dot"></span>
+                    Monitoring active
+                </div>
+
+                <button class="button button-outline" id="refreshBtn" type="button">
+                    <i data-lucide="refresh-cw"></i>
+                    Refresh
+                </button>
+            </div>
+        </section>
+
+        <!-- Summary cards -->
+        <section class="stats-grid" aria-label="Alert summary">
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Critical Alerts</span>
+                    <span class="stat-icon stat-danger">
+                        <i data-lucide="siren"></i>
+                    </span>
+                </div>
+                <div class="stat-value-row">
+                    <h3 id="criticalCount">—</h3>
+                    <span class="stat-tag tag-danger">Urgent</span>
+                </div>
+                <p>Immediate attention required</p>
+                <div class="stat-bottom-line danger-line"></div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Active Alerts</span>
+                    <span class="stat-icon stat-warning">
+                        <i data-lucide="alert-triangle"></i>
+                    </span>
+                </div>
+                <div class="stat-value-row">
+                    <h3 id="activeCount">—</h3>
+                    <span class="stat-tag tag-warning">In progress</span>
+                </div>
+                <p>Alerts awaiting resolution</p>
+                <div class="stat-bottom-line warning-line"></div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Investigating</span>
+                    <span class="stat-icon stat-blue">
+                        <i data-lucide="shield-check"></i>
+                    </span>
+                </div>
+                <div class="stat-value-row">
+                    <h3 id="investigatingCount">—</h3>
+                    <span class="stat-tag tag-blue">Under review</span>
+                </div>
+                <p>Response team reviewing</p>
+                <div class="stat-bottom-line blue-line"></div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Resolved</span>
+                    <span class="stat-icon stat-green">
+                        <i data-lucide="check-circle-2"></i>
+                    </span>
+                </div>
+                <div class="stat-value-row">
+                    <h3 id="resolvedCount">—</h3>
+                    <span class="stat-tag tag-green">Completed</span>
+                </div>
+                <p>Resolved alerts</p>
+                <div class="stat-bottom-line green-line"></div>
+            </article>
+
+        </section>
+
+        <!-- Alert management -->
+        <section class="alerts-panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Alert Management</h3>
+                    <p>Review incidents and manage response status.</p>
+                </div>
+
+                <div class="panel-live">
+                    <span class="live-dot"></span>
+                    <span id="visibleAlertCount">Loading alerts...</span>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <label class="search-box">
+                    <i data-lucide="search"></i>
+                    <input type="search" id="searchInput"
+                        placeholder="Search alerts, locations or IDs..."
+                        aria-label="Search alerts">
+                    <kbd>⌕</kbd>
+                </label>
+
+                <label class="filter-control">
+                    <span>Severity</span>
+                    <select id="severityFilter" aria-label="Filter by severity">
+                        <option value="all">All severities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </label>
+
+                <label class="filter-control">
+                    <span>Status</span>
+                    <select id="statusFilter" aria-label="Filter by status">
+                        <option value="all">All statuses</option>
+                        <option value="active">Active</option>
+                        <option value="investigating">Investigating</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </label>
+
+                <button class="button button-reset" id="resetFiltersBtn" type="button"
+                    title="Clear filters">
+                    <i data-lucide="list-filter"></i>
+                    Reset
+                </button>
+            </div>
+
+            <div class="alert-list" id="alertList">
+
+                <!-- Alert 1 -->
+                <article class="alert-card"
+                    data-id="TN-1042"
+                    data-severity="critical"
+                    data-status="active"
+                    data-title="Medical emergency"
+                    data-location="Pune Railway Station"
+                    data-traveler="TR-2081"
+                    data-team="Medical Response Team"
+                    data-description="A traveler has requested urgent medical assistance. Verify the location and coordinate with the appropriate emergency response team."
+                    data-search="medical emergency pune railway station traveler medical">
+
+                    <div class="severity-rail rail-critical"></div>
+
+                    <div class="alert-card-inner">
+                        <div class="alert-main-row">
+                            <div class="alert-symbol symbol-critical">
+                                <i data-lucide="heart-pulse"></i>
+                            </div>
+
+                            <div class="alert-main-copy">
+                                <div class="alert-badges">
+                                    <span class="severity-badge badge-critical">
+                                        <span></span> Critical
+                                    </span>
+                                    <span class="status-badge status-active">Active</span>
+                                </div>
+
+                                <h4>Medical Emergency</h4>
+                                <span class="alert-reference">TN-1042</span>
+                            </div>
+
+                            <span class="alert-age">
+                                <i data-lucide="clock-3"></i> 5 min ago
+                            </span>
+                        </div>
+
+                        <p class="alert-description">
+                            A traveler has requested urgent medical assistance.
+                            Immediate verification and coordination are needed.
+                        </p>
+
+                        <div class="alert-meta">
+                            <span><i data-lucide="map-pin"></i> Pune Railway Station</span>
+                            <span><i data-lucide="user-round"></i> TR-2081</span>
+                            <span><i data-lucide="users"></i> Medical Response Team</span>
+                        </div>
+
+                        <div class="alert-footer">
+                            <span class="updated-label">
+                                <i data-lucide="activity"></i> Requires immediate review
+                            </span>
+
+                            <div class="alert-actions">
+                                <button class="button button-outline view-btn" type="button">
+                                    <i data-lucide="eye"></i> View details
+                                </button>
+                                <button class="button button-primary investigate-btn" type="button">
+                                    <i data-lucide="shield-check"></i> Investigate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Alert 2 -->
+                <article class="alert-card"
+                    data-id="TN-1041"
+                    data-severity="high"
+                    data-status="investigating"
+                    data-title="Suspicious activity"
+                    data-location="Mumbai Central"
+                    data-traveler="TR-1937"
+                    data-team="Security Response Team"
+                    data-description="Unusual activity has been flagged for review. Verify the report and assess whether the traveler or nearby people require assistance."
+                    data-search="suspicious activity mumbai central security traveler">
+
+                    <div class="severity-rail rail-high"></div>
+
+                    <div class="alert-card-inner">
+                        <div class="alert-main-row">
+                            <div class="alert-symbol symbol-high">
+                                <i data-lucide="shield-alert"></i>
+                            </div>
+
+                            <div class="alert-main-copy">
+                                <div class="alert-badges">
+                                    <span class="severity-badge badge-high">
+                                        <span></span> High
+                                    </span>
+                                    <span class="status-badge status-investigating">Investigating</span>
+                                </div>
+
+                                <h4>Suspicious Activity</h4>
+                                <span class="alert-reference">TN-1041</span>
+                            </div>
+
+                            <span class="alert-age">
+                                <i data-lucide="clock-3"></i> 18 min ago
+                            </span>
+                        </div>
+
+                        <p class="alert-description">
+                            Unusual activity has been flagged for review.
+                            The security response team is checking the report.
+                        </p>
+
+                        <div class="alert-meta">
+                            <span><i data-lucide="map-pin"></i> Mumbai Central</span>
+                            <span><i data-lucide="user-round"></i> TR-1937</span>
+                            <span><i data-lucide="users"></i> Security Response Team</span>
+                        </div>
+
+                        <div class="alert-footer">
+                            <span class="updated-label">
+                                <i data-lucide="search-check"></i> Review in progress
+                            </span>
+
+                            <div class="alert-actions">
+                                <button class="button button-outline view-btn" type="button">
+                                    <i data-lucide="eye"></i> View details
+                                </button>
+                                <button class="button button-primary resolve-btn" type="button">
+                                    <i data-lucide="check-circle-2"></i> Resolve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Alert 3 -->
+                <article class="alert-card"
+                    data-id="TN-1040"
+                    data-severity="medium"
+                    data-status="active"
+                    data-title="Geofence boundary violation"
+                    data-location="Nashik Travel Zone"
+                    data-traveler="TR-1764"
+                    data-team="Monitoring Team"
+                    data-description="The reported traveler location appears outside the configured geofence. Confirm the traveler's safety and review the route information."
+                    data-search="geofence boundary violation nashik travel zone location traveler">
+
+                    <div class="severity-rail rail-medium"></div>
+
+                    <div class="alert-card-inner">
+                        <div class="alert-main-row">
+                            <div class="alert-symbol symbol-medium">
+                                <i data-lucide="map-pin"></i>
+                            </div>
+
+                            <div class="alert-main-copy">
+                                <div class="alert-badges">
+                                    <span class="severity-badge badge-medium">
+                                        <span></span> Medium
+                                    </span>
+                                    <span class="status-badge status-active">Active</span>
+                                </div>
+
+                                <h4>Geofence Boundary Violation</h4>
+                                <span class="alert-reference">TN-1040</span>
+                            </div>
+
+                            <span class="alert-age">
+                                <i data-lucide="clock-3"></i> 32 min ago
+                            </span>
+                        </div>
+
+                        <p class="alert-description">
+                            The reported traveler location appears outside the
+                            configured geofence. Confirm safety and review the route.
+                        </p>
+
+                        <div class="alert-meta">
+                            <span><i data-lucide="map-pin"></i> Nashik Travel Zone</span>
+                            <span><i data-lucide="user-round"></i> TR-1764</span>
+                            <span><i data-lucide="users"></i> Monitoring Team</span>
+                        </div>
+
+                        <div class="alert-footer">
+                            <span class="updated-label">
+                                <i data-lucide="map"></i> Location verification needed
+                            </span>
+
+                            <div class="alert-actions">
+                                <button class="button button-outline view-btn" type="button">
+                                    <i data-lucide="eye"></i> View details
+                                </button>
+                                <button class="button button-primary investigate-btn" type="button">
+                                    <i data-lucide="shield-check"></i> Investigate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="empty-state" id="emptyState" hidden>
+                    <div class="empty-icon"><i data-lucide="search-x"></i></div>
+                    <h3>No alerts found</h3>
+                    <p>Try another search term or reset your filters.</p>
+                    <button class="button button-primary" id="emptyResetBtn" type="button">
+                        Reset filters
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <span><i data-lucide="shield-check"></i> Travel Nexus Authority Portal</span>
+            <span>Emergency Alert Management</span>
+        </footer>
+    </main>
+
+    <!-- ================= DETAILS MODAL ================= -->
+    <div class="modal-backdrop" id="alertModal" hidden>
+        <section class="details-modal" role="dialog" aria-modal="true"
+            aria-labelledby="modalTitle">
+            <div class="modal-heading">
+                <div class="modal-title-icon"><i data-lucide="shield-alert"></i></div>
+                <div>
+                    <span class="eyebrow">INCIDENT OVERVIEW</span>
+                    <h3 id="modalTitle">Alert Details</h3>
+                    <p id="modalReference">Alert reference</p>
+                </div>
+                <button class="modal-close" id="closeModalBtn" type="button"
+                    aria-label="Close dialog">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-content" id="modalContent"></div>
+
+            <div class="modal-actions">
+                <button class="button button-outline" id="modalCloseBtn" type="button">
+                    Close
+                </button>
+                <button class="button button-primary" id="modalActionBtn" type="button">
+                    <i data-lucide="check-circle-2"></i>
+                    Update status
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast feedback -->
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        <span class="toast-icon"><i data-lucide="check-circle-2"></i></span>
+        <span id="toastMessage">Action completed.</span>
+        <button id="closeToastBtn" type="button" aria-label="Dismiss message">
+            <i data-lucide="x"></i>
+        </button>
+    </div>
+
+    <script src="../js/notifications.js?v=1"></script>
+    <script src="../js/alerts.js?v=live-alerts-2"></script>
+</body>
+</html>

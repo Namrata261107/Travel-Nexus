@@ -1,0 +1,42 @@
+.lost-found-module { --lf-accent:#6256e8; --lf-ink:#20243a; --lf-muted:#777d92; --lf-border:#e9eaf2; color:var(--lf-ink); }
+.lost-found-module .page-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; }
+.lost-found-module .page-title h1 { margin:0 0 .4rem; color:var(--lf-ink); letter-spacing:-.04em; }
+.lost-found-module .page-title p,.lf-list-heading p { margin:0; color:var(--lf-muted); }
+.lost-found-module .page-title p { font-size:1rem; }
+.lf-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; margin-bottom:1.25rem; }
+.lf-stats article { position:relative; display:flex; flex-direction:column; gap:.7rem; padding:1.15rem 1.25rem; background:#fff; border:1px solid var(--lf-border); border-radius:16px; box-shadow:0 10px 28px #22254c0b; }
+.lf-stats article::after { content:""; position:absolute; left:1.25rem; right:1.25rem; bottom:0; height:3px; border-radius:3px; background:linear-gradient(90deg,#756af5,#cbc7ff); }
+.lf-stats span { color:var(--lf-muted); font-size:.84rem; font-weight:600; }.lf-stats strong { color:var(--lf-ink); font-size:1.8rem; line-height:1; }
+.lf-workspace { padding:1.4rem; border:1px solid var(--lf-border); border-radius:18px; background:#fff; box-shadow:0 10px 30px #22254c0e; }
+.lf-toolbar { display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1rem; }
+.lf-toolbar input,.lf-toolbar select { min-height:44px; padding:.65rem .8rem; border:1px solid var(--lf-border); border-radius:10px; background:white; color:var(--lf-ink); transition:border-color .18s,box-shadow .18s; }
+.lf-toolbar input:focus,.lf-toolbar select:focus,.lost-found-module .form-field input:focus,.lost-found-module .form-field select:focus,.lost-found-module .form-field textarea:focus { outline:none; border-color:#aaa3fa; box-shadow:0 0 0 4px #6256e81a; }
+.lf-toolbar input { flex:1 1 260px; }.lf-toolbar select { flex:0 1 180px; }
+.lf-categories { display:flex; gap:.5rem; flex-wrap:wrap; padding-bottom:1rem; border-bottom:1px solid #e7edf5; }
+.lf-categories .category-chip { border:1px solid var(--lf-border); border-radius:999px; background:white; color:#656b80; padding:.55rem .9rem; cursor:pointer; font-size:.84rem; font-weight:600; transition:.18s ease; }
+.lf-categories .category-chip:hover { border-color:#c6c1ff; color:var(--lf-accent); background:#f8f7ff; }
+.lf-categories .category-chip.active { color:#fff; border-color:var(--lf-accent); background:linear-gradient(135deg,#756af5,#5144d3); box-shadow:0 5px 14px #6256e833; }
+.lf-list-heading { padding:1.1rem 0 .8rem; }.lf-list-heading h2 { margin:0 0 .3rem; font-size:1.15rem; color:var(--lf-ink); }
+.lost-found-module .items-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),410px)); gap:1rem; align-items:stretch; }
+.lost-found-module .item-card { padding:1.1rem; border:1px solid var(--lf-border); border-radius:15px; background:#fff; box-shadow:0 8px 22px #22254c0a; transition:transform .18s ease,box-shadow .18s ease; }.lost-found-module .item-card:hover { transform:translateY(-2px); box-shadow:0 14px 28px #22254c14; }
+.lost-found-module .item-card-top,.lost-found-module .item-card-footer { display:flex; justify-content:space-between; align-items:center; gap:.75rem; }
+.lost-found-module .item-category-icon { display:grid; place-items:center; width:44px; height:44px; border-radius:13px; color:#6256e8; background:#f0efff; font-size:1.05rem; }
+.lost-found-module .item-card h3 { margin:.9rem 0 .4rem; color:#20243a; font-size:1.12rem; }.lost-found-module .item-description { color:#72788c; min-height:2.5rem; line-height:1.5; }
+.lost-found-module .item-meta { display:grid; gap:.45rem; margin:1rem 0; color:#52627a; font-size:.88rem; }
+.lost-found-module .meta-row { display:flex; gap:.55rem; align-items:flex-start; }.lost-found-module .meta-row i { color:#3977ec; margin-top:.2rem; }
+.lost-found-module .report-id { max-width:175px; overflow-wrap:anywhere; font-size:.74rem; color:#81869a; margin-bottom:.4rem; }
+.lost-found-module .type-badge,.lost-found-module .status-badge { display:inline-flex; padding:.3rem .55rem; border-radius:999px; font-size:.78rem; background:#eff6ff; color:#2563eb; }
+.lost-found-module .type-badge.found { background:#ecfdf5; color:#059669; }
+.lost-found-module .status-badge.resolved { background:#ecfdf5; color:#059669; }.lost-found-module .status-badge.in-progress { background:#fff7ed; color:#c2410c; }
+.lost-found-module .card-actions { display:flex; gap:.35rem; flex-shrink:0; }.lost-found-module .card-action { display:grid; place-items:center; width:35px; height:35px; border:1px solid #e4e6f0; border-radius:10px; color:#6256e8; background:#fff; cursor:pointer; transition:.18s ease; }.lost-found-module .card-action:hover { border-color:#c9c4fa; background:#f6f5ff; }.lost-found-module .card-action.danger { color:#dc4b4b; }
+.lost-found-module .empty-state { text-align:center; padding:2rem; color:#64748b; }
+.lost-found-module .modal-backdrop { position:fixed; inset:0; z-index:3000; display:grid; place-items:center; padding:1rem; background:#15213c88; overflow:auto; }
+.lost-found-module .modal-backdrop[hidden] { display:none !important; }.lost-found-module .modal { width:min(720px,100%); max-height:92vh; overflow:auto; padding:1.4rem; border:1px solid #eeedf8; border-radius:20px; background:white; box-shadow:0 24px 70px #0f172a40; }
+.lost-found-module .modal-header { display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; margin-bottom:1.2rem; }.lost-found-module .modal-header h2 { margin:0 0 .35rem; }.lost-found-module .modal-header p { margin:0; color:#64748b; }
+.lost-found-module .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }.lost-found-module .form-field { display:grid; gap:.45rem; color:#475569; font-weight:600; font-size:.9rem; }.lost-found-module .form-field.full-width { grid-column:1/-1; }
+.lost-found-module .form-field input,.lost-found-module .form-field select,.lost-found-module .form-field textarea { width:100%; min-height:44px; padding:.65rem .75rem; border:1px solid #d8e1ee; border-radius:10px; color:#172b4d; background:white; font:inherit; }.lost-found-module .form-field textarea { min-height:90px; }
+.lost-found-module .modal-actions { display:flex; justify-content:flex-end; gap:.7rem; margin-top:1.25rem; padding-top:1rem; border-top:1px solid #f0eff7; }.lost-found-module .primary-button,.lost-found-module .secondary-button { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:42px; margin:0; padding:.65rem 1rem; border:1px solid transparent; border-radius:10px; cursor:pointer; font-weight:700; transition:.18s ease; }.lost-found-module .primary-button { color:white; background:linear-gradient(135deg,#756af5,#5144d3); box-shadow:0 7px 16px #6256e82b; }.lost-found-module .primary-button:hover { filter:brightness(.97); transform:translateY(-1px); }.lost-found-module .secondary-button { color:#596078; background:white; border-color:var(--lf-border); }
+.lost-found-module > .page-header .primary-button { min-height:46px; padding:0 1.15rem; }
+.lost-found-module .details-content { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }.lost-found-module .detail-cell { padding:.75rem; background:#f8fafc; border-radius:10px; }.lost-found-module .detail-cell.full { grid-column:1/-1; }.lost-found-module .detail-label { display:block; margin-bottom:.3rem; color:#64748b; font-size:.8rem; }
+.lost-found-module .toast-container { position:fixed; right:1.2rem; bottom:1.2rem; z-index:4000; display:grid; gap:.6rem; }.lost-found-module .toast { display:flex; gap:.7rem; width:min(360px,calc(100vw - 2rem)); padding:1rem; border-radius:12px; background:white; box-shadow:0 12px 40px #0f172a30; }.lost-found-module .toast p { margin:.25rem 0 0; color:#64748b; }.lost-found-module .toast.error { border-left:4px solid #ef4444; }
+@media(max-width:700px) { .lf-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }.lost-found-module .page-header { align-items:flex-start; flex-direction:column; }.lost-found-module .form-grid,.lost-found-module .details-content { grid-template-columns:1fr; }.lost-found-module .form-field.full-width,.lost-found-module .detail-cell.full { grid-column:auto; } }

@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07172e">
+    <title>Travel Nexus | Secure Access</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+<main class="page-shell">
+
+    <section class="hero-panel">
+        <a class="brand" href="../Traveller_Module/index.html">
+            <span class="brand-symbol">✦</span>
+            Travel<span class="brand-accent">Nexus</span>
+        </a>
+
+        <div class="hero-content">
+            <span class="eyebrow">SMART TOURISM · SAFETY · AI</span>
+            <h1>Every journey<br>deserves to be<br><span>safer.</span></h1>
+            <p class="hero-description">
+                One connected platform for safer travel, real-time
+                location monitoring, intelligent alerts and emergency support.
+            </p>
+
+            <div class="feature-list">
+                <div><span>01</span><div><b>Live location</b><small>Stay connected throughout your journey.</small></div></div>
+                <div><span>02</span><div><b>Smart geofencing</b><small>Get notified about designated safety zones.</small></div></div>
+                <div><span>03</span><div><b>Emergency assistance</b><small>Access the platform's SOS features.</small></div></div>
+                <div><span>04</span><div><b>AI travel assistant</b><small>Get help and travel information.</small></div></div>
+            </div>
+        </div>
+
+        <div class="hero-footer">
+            <span class="status-dot"></span>
+            Technology for more confident journeys
+            <span>© 2026 Travel Nexus</span>
+        </div>
+    </section>
+
+    <section class="auth-panel">
+        <div class="auth-card">
+
+            <a class="brand mobile-brand" href="../Traveller_Module/index.html">
+                <span class="brand-symbol">✦</span>
+                Travel<span class="brand-accent">Nexus</span>
+            </a>
+
+            <div class="auth-heading">
+                <span class="eyebrow">YOUR JOURNEY STARTS HERE</span>
+                <h2 id="formTitle">Welcome back</h2>
+                <p id="formSubtitle">Sign in to access your secure dashboard.</p>
+            </div>
+
+            <div class="role-switch" id="loginRoleSwitch">
+                <button type="button" class="role-btn active"
+                        id="travelerBtn" aria-pressed="true">
+                    <span>♧</span> Traveler
+                </button>
+                <button type="button" class="role-btn"
+                        id="authorityBtn" aria-pressed="false">
+                    <span>⬡</span> Authority
+                </button>
+            </div>
+
+            <p class="role-caption" id="roleCaption">
+                Continue as <strong id="roleText">Traveler</strong>
+            </p>
+
+            <form id="loginForm">
+                <div class="field">
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email"
+                           placeholder="you@example.com"
+                           autocomplete="email" required>
+                    <small class="error" id="emailError"></small>
+                </div>
+
+                <div class="field">
+                    <div class="label-row">
+                        <label for="password">Password</label>
+                        <button type="button" class="text-button"
+                                id="forgotBtn">Forgot password?</button>
+                    </div>
+                    <div class="password-wrap">
+                        <input id="password" name="password" type="password"
+                               placeholder="Enter your password"
+                               autocomplete="current-password" required>
+                        <button type="button" id="passwordToggle"
+                                class="password-toggle"
+                                aria-label="Show password">Show</button>
+                    </div>
+                    <small class="error" id="passwordError"></small>
+                </div>
+
+                <label class="remember-row">
+                    <input type="checkbox" id="remember">
+                    <span>Remember me on this device</span>
+                </label>
+
+                <button class="primary-btn" id="loginBtn" type="submit">
+                    <span id="loginText">Sign in securely</span>
+                    <span id="arrow">→</span>
+                    <span class="loader" id="loader" hidden></span>
+                </button>
+            </form>
+
+            <div class="message" id="message" role="status"
+                 aria-live="polite"></div>
+
+            <div class="separator"><span>NEW TO TRAVEL NEXUS?</span></div>
+
+            <button type="button" id="signupBtn" class="secondary-btn">
+                Create your account <span>↗</span>
+            </button>
+
+            <p class="privacy-note">
+                <span>♧</span> Secure authentication · Protected account access
+            </p>
+        </div>
+    </section>
+</main>
+
+<!-- REGISTRATION -->
+<div class="modal" id="registerModal" role="dialog"
+     aria-modal="true" aria-labelledby="registerTitle" hidden>
+    <section class="modal-card">
+        <button type="button" class="close-modal" id="closeRegister"
+                aria-label="Close registration">×</button>
+
+        <a class="brand modal-brand" href="../Traveller_Module/index.html">
+            <span class="brand-symbol">✦</span>
+            Travel<span class="brand-accent">Nexus</span>
+        </a>
+
+        <span class="eyebrow">JOIN THE COMMUNITY</span>
+        <h2 id="registerTitle">Create your account</h2>
+        <p class="modal-description">
+            Set up your account to get started with Travel Nexus.
+        </p>
+
+        <form id="registerForm">
+            <div class="field">
+                <label for="registerName">Full name</label>
+                <input id="registerName" name="fullName" type="text"
+                       placeholder="Enter your full name"
+                       autocomplete="name" required>
+            </div>
+
+            <div class="field">
+                <label for="registerEmail">Email address</label>
+                <input id="registerEmail" name="email" type="email"
+                       placeholder="you@example.com"
+                       autocomplete="email" required>
+            </div>
+
+            <div class="field" id="registerPhoneField">
+                <label for="registerPhone">Mobile number for SMS alerts</label>
+                <input id="registerPhone" name="phone" type="tel"
+                       placeholder="e.g. 9876543210"
+                       autocomplete="tel" inputmode="tel"
+                       pattern="[+0-9() .-]{8,20}"
+                       aria-describedby="registerPhoneHint">
+                <small id="registerPhoneHint">Used to send you an SMS when you enter a geofence.</small>
+            </div>
+
+            <div class="field">
+                <label for="registerPassword">Create password</label>
+                <input id="registerPassword" name="password"
+                       type="password" minlength="8"
+                       autocomplete="new-password"
+                       placeholder="At least 8 characters" required>
+            </div>
+
+            <div class="field">
+                <label for="confirmPassword">Confirm password</label>
+                <input id="confirmPassword" name="confirmPassword"
+                       type="password" minlength="8"
+                       autocomplete="new-password"
+                       placeholder="Enter password again" required>
+            </div>
+
+            <label class="field-label">Account type</label>
+            <div class="register-roles">
+                <label class="register-role">
+                    <input type="radio" name="registerRole"
+                           value="traveler" checked>
+                    <span>♧ Traveler</span>
+                </label>
+                <label class="register-role">
+                    <input type="radio" name="registerRole"
+                           value="authority">
+                    <span>⬡ Authority</span>
+                </label>
+            </div>
+
+            <p class="authority-note">
+                Authority accounts receive immediate dashboard access.
+            </p>
+
+            <label class="remember-row terms-row">
+                <input type="checkbox" id="acceptTerms" required>
+                <span>I agree to the platform's terms and privacy policy.</span>
+            </label>
+
+            <button type="submit" class="primary-btn"
+                    id="registerBtn">
+                Create account <span>→</span>
+            </button>
+        </form>
+
+        <div class="message" id="registerMessage"
+             role="status" aria-live="polite"></div>
+
+        <p class="modal-switch">
+            Already registered?
+            <button type="button" id="backToLogin">Sign in</button>
+        </p>
+    </section>
+</div>
+
+<!-- PASSWORD RESET -->
+<div class="modal" id="forgotModal" role="dialog"
+     aria-modal="true" aria-labelledby="resetTitle" hidden>
+    <section class="modal-card reset-card">
+        <button type="button" class="close-modal" id="closeModal"
+                aria-label="Close password reset">×</button>
+        <span class="reset-icon">↻</span>
+        <h2 id="resetTitle">Reset your password</h2>
+        <p class="modal-description">
+            Enter your registered email to receive a secure reset link.
+        </p>
+        <form id="resetForm">
+            <div class="field">
+                <label for="resetEmail">Email address</label>
+                <input type="email" id="resetEmail" required
+                       autocomplete="email" placeholder="you@example.com">
+            </div>
+            <button class="primary-btn" id="resetBtn" type="submit">
+                Send reset link <span>→</span>
+            </button>
+        </form>
+        <div class="message" id="resetMessage"
+             role="status" aria-live="polite"></div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../Traveller_Module/js/supabase-client.js"></script>
+<script>
+    window.initializeSupabaseClient();
+</script>
+<script src="../js/login.js"></script>
+</body>
+</html>

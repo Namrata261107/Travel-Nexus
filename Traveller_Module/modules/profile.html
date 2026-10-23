@@ -1,0 +1,80 @@
+<section class="page-section" id="profile">
+    <div class="page-header">
+        <div class="page-title">
+            <h1>My Profile</h1>
+            <p>Your account details and current location.</p>
+        </div>
+        <button class="primary-button" type="button" onclick="loadTravellerProfile()">
+            Refresh profile
+        </button>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-avatar" id="profileAvatar">T</div>
+            <h2 id="profileName">Loading profile...</h2>
+            <p>Registered Traveller</p>
+            <p>Traveller ID: <strong id="profileTravelerId">Loading...</strong></p>
+        </div>
+
+        <div class="profile-details">
+            <h2>Registration information</h2>
+            <div class="profile-row">
+                <span class="profile-label">Full name</span>
+                <span class="profile-value" id="profileFullName">Loading...</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Traveller ID</span>
+                <span class="profile-value" id="profileTravelerIdDetails">Loading...</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Email</span>
+                <span class="profile-value" id="profileEmail">Loading...</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">SMS mobile</span>
+                <span class="profile-value" id="profilePhone">Not provided</span>
+            </div>
+
+            <h2 style="margin-top: 30px;">Current place</h2>
+            <div class="profile-row">
+                <span class="profile-label">Place name</span>
+                <span class="profile-value" id="profileLocationName">Not shared</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Latitude</span>
+                <span class="profile-value" id="profileLatitude">Not shared</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Longitude</span>
+                <span class="profile-value" id="profileLongitude">Not shared</span>
+            </div>
+
+            <div style="margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="primary-button" type="button" onclick="window.openTravellerProfileEditor()">
+                    Edit profile
+                </button>
+            </div>
+            <p id="profileMessage" role="status" aria-live="polite" style="margin-top: 15px;"></p>
+        </div>
+    </div>
+
+    <div id="travellerProfileEditor" hidden style="margin-top: 25px;" class="profile-details">
+        <h2>Edit registration details</h2>
+        <form id="travellerProfileForm" onsubmit="saveTravellerProfile(event)">
+            <div class="profile-row">
+                <label class="profile-label" for="editProfileName">Full name</label>
+                <input id="editProfileName" type="text" required maxlength="100">
+            </div>
+            <div class="profile-row">
+                <label class="profile-label" for="editProfilePhone">SMS mobile</label>
+                <input id="editProfilePhone" type="tel" inputmode="tel" autocomplete="tel"
+                       pattern="[+0-9() .-]{8,20}" placeholder="e.g. 9876543210" required>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+                <button class="primary-button" type="submit">Save changes</button>
+                <button class="secondary-button" type="button" onclick="closeTravellerProfileEditor()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,169 @@
+<section class="page-section" id="geofence">
+<div class="page-header">
+<div class="page-title">
+<h1>
+                Geofence
+            </h1>
+<p>
+                Real-time location monitoring and geofencing protection
+            </p>
+</div>
+<div class="location-status">
+<div class="online-dot"></div>
+
+            <span data-location-status>Location sharing off</span>
+
+        </div>
+</div>
+<!-- LOCATION CARDS -->
+<div class="cards">
+<div class="card">
+<div class="card-top">
+<div class="card-title">
+                    CURRENT LATITUDE
+                </div>
+<div class="card-icon">
+                    📍
+                </div>
+</div>
+<div class="card-value" id="latitude">
+
+                Detecting...
+
+            </div>
+</div>
+<div class="card">
+<div class="card-top">
+<div class="card-title">
+                    CURRENT LONGITUDE
+                </div>
+<div class="card-icon">
+                    🌐
+                </div>
+</div>
+<div class="card-value" id="longitude">
+
+                Detecting...
+
+            </div>
+</div>
+<div class="card">
+<div class="card-top">
+<div class="card-title">
+                    SAFETY STATUS
+                </div>
+<div class="card-icon">
+                    🛡️
+                </div>
+</div>
+<div class="card-value" id="status">
+
+                Checking...
+
+            </div>
+</div>
+</div>
+<!-- MAP -->
+<section class="map-section">
+<div class="map-header">
+<div class="map-title">
+<h2>
+                    Live Geofencing Map
+                </h2>
+<span>
+                    LIVE
+                </span>
+</div>
+<div class="legend">
+<div class="legend-item">
+<div class="legend-dot green"></div>
+
+                    Your Location
+
+                </div>
+<div class="legend-item">
+<div class="legend-dot red"></div>
+
+                    Restricted Zone
+
+                </div>
+<div class="legend-item">
+<div class="legend-dot orange"></div>
+                    Caution Zone
+</div>
+<div class="legend-item">
+<div class="legend-dot green"></div>
+                    Safe Zone
+</div>
+</div>
+</div>
+<div id="map"></div>
+</section>
+<!-- INFORMATION -->
+<div class="bottom-grid">
+<div class="info-panel">
+<h3>
+                📍 Current Location Details
+            </h3>
+<div class="location-row">
+<span class="location-label">
+                    Traveler
+                </span>
+<span class="location-value">
+    <span id="travelerName">Traveler</span>
+                </span>
+</div>
+<div class="location-row">
+<span class="location-label">
+                    Traveler ID
+                </span>
+<span class="location-value">
+    <span id="travelerId">—</span>
+                </span>
+</div>
+<div class="location-row">
+<span class="location-label">
+                    Latitude
+                </span>
+<span class="location-value" id="detailLatitude">
+
+                    Detecting...
+
+                </span>
+</div>
+<div class="location-row">
+<span class="location-label">
+                    Longitude
+                </span>
+<span class="location-value" id="detailLongitude">
+
+                    Detecting...
+
+                </span>
+</div>
+<div class="location-row">
+<span class="location-label">
+                    Geofence Radius
+                </span>
+<span class="location-value">
+                    <span id="geofenceZoneSummary">Load active zones to see their radius.</span>
+                </span>
+</div>
+</div>
+<div class="info-panel">
+<h3>
+                🛡️ Safety Information
+            </h3>
+<div class="alert-box success" id="alertBox">
+<b>
+                    Share your location to check active geofences.
+                </b>
+<br/>
+
+                Please wait while your location
+                is being verified.
+
+            </div>
+</div>
+</div>
+</section>

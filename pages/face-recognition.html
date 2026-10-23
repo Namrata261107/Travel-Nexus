@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Travel Nexus | Live Face Recognition</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/face-recognition.css?v=sticky-nav-2">
+</head>
+
+<body>
+  <header class="topbar">
+    <a href="authority.html" class="brand">
+      <div class="brand-logo"><i class="fa-solid fa-compass"></i></div>
+      <div class="brand-copy">
+        <strong>TRAVEL <span>NEXUS</span></strong>
+        <small>AUTHORITY PORTAL</small>
+      </div>
+    </a>
+
+    <div class="topbar-right">
+      <div class="system-status">
+        <span class="status-dot"></span>
+        <span>Face Reports</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="main-nav" aria-label="Main navigation">
+    <a href="authority.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+    <a href="alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+    <a href="geofences.html"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+    <a href="travelers.html"><i class="fa-solid fa-users"></i> Travelers</a>
+    <a href="lostfound.html"><i class="fa-solid fa-magnifying-glass"></i> Lost &amp; Found</a>
+    <a href="assistant.html"><i class="fa-solid fa-robot"></i> AI Assistance</a>
+    <a href="face-recognition.html" class="active" aria-current="page"><i class="fa-solid fa-user-shield"></i> Face Recognition</a>
+    <a href="setting.html"><i class="fa-solid fa-gear"></i> Settings</a>
+  </nav>
+
+  <main class="page-container face-workflow-page">
+    <section class="face-intro">
+      <div>
+        <p class="face-section-eyebrow">FACE REPORTS</p>
+        <h1>Face Recognition &amp; Case Reports</h1>
+        <p>Create a person report, then start the camera to look for potential matches. Matches are leads for human review, not proof of identity.</p>
+      </div>
+    </section>
+
+    <section class="live-camera-panel" id="liveCameraPanel" aria-label="Live face recognition camera">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <div class="live-camera-placeholder" id="cameraPlaceholder">
+        <i class="fa-solid fa-camera"></i>
+        <h2>Camera is off</h2>
+        <p>Camera access is requested only after you click Start Camera.</p>
+      </div>
+      <div class="live-camera-status" id="cameraStatus" role="status" aria-live="polite">
+        Camera is off
+      </div>
+      <div class="live-camera-controls">
+        <p class="live-camera-notice">
+          Hold a potential match in view for about 3 seconds. The frame, report details, date/time, and available location are saved for authority review.
+        </p>
+        <button type="button" class="button button-primary live-camera-button" id="toggleCameraBtn">
+          <i class="fa-solid fa-video"></i><span>Start Camera</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="face-workflow-grid">
+      <article class="face-workflow-card" id="createFaceReportCard">
+        <div class="face-card-heading">
+          <div>
+            <p class="face-section-eyebrow">CREATE A REFERENCE</p>
+            <h2>Create Person Report</h2>
+            <p>Add a clear reference photo. It will be compared only while the camera is running.</p>
+          </div>
+        </div>
+        <form id="faceReportForm">
+          <label for="personName">Person name</label>
+          <input id="personName" name="name" type="text" maxlength="120" autocomplete="off" required>
+
+          <label for="reportType">Report type</label>
+          <select id="reportType" name="report_type" required>
+            <option value="">Select a type</option>
+            <option value="suspicious">Suspicious</option>
+            <option value="missing_child">Missing child</option>
+            <option value="missing_person">Missing person</option>
+          </select>
+
+          <label for="personDescription">Additional information <span>(optional)</span></label>
+          <textarea id="personDescription" name="description" maxlength="1000" rows="3"></textarea>
+
+          <label for="referencePhoto">Reference photo</label>
+          <input id="referencePhoto" name="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+          <p class="face-form-help">Use a clear, authorized photo with one visible face. Maximum 8 MB.</p>
+
+          <button type="submit" class="button button-primary" id="saveFaceReportBtn">
+            <i class="fa-solid fa-file-circle-plus"></i><span>Save Person Report</span>
+          </button>
+          <p class="face-form-status" id="faceReportFormStatus" role="status" aria-live="polite"></p>
+        </form>
+      </article>
+
+      <article class="face-workflow-card">
+        <div class="face-card-heading">
+          <div>
+            <p class="face-section-eyebrow">REGISTERED REFERENCE REPORTS</p>
+            <h2>Reports Used for Matching</h2>
+            <p>These reports are stored in the database and prepared for matching when you start the camera.</p>
+          </div>
+          <button type="button" class="button button-outline face-refresh-button" id="refreshFaceDataBtn">
+            <i class="fa-solid fa-rotate"></i><span>Refresh</span>
+          </button>
+        </div>
+        <p class="face-data-status" id="faceCasesStatus" role="status" aria-live="polite">Loading reports...</p>
+        <div class="face-record-grid" id="faceCasesGrid"></div>
+      </article>
+    </section>
+
+    <section class="face-workflow-card face-detections-card">
+      <div class="face-card-heading">
+        <div>
+          <p class="face-section-eyebrow">HUMAN REVIEW REQUIRED</p>
+          <h2>Potential Match Detections</h2>
+          <p>Camera captures saved after a potential match remains visible for about 3 seconds.</p>
+        </div>
+      </div>
+      <p class="face-data-status" id="faceDetectionsStatus" role="status" aria-live="polite">Loading detections...</p>
+      <div class="face-record-grid detection-record-grid" id="faceDetectionsGrid"></div>
+    </section>
+  </main>
+
+  <script src="../js/face-recognition.js?v=face-cases-4"></script>
+</body>
+</html>

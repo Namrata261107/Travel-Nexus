@@ -1,0 +1,575 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+
+  <title>Travel Nexus | Geofence Management</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="../css/geofences.css">
+  <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+  <link rel="stylesheet" href="../css/notifications.css?v=1">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+
+
+  <!-- Leaflet Library -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+                <strong>Travel Nexus</strong>
+                <small>Authority Command Center</small>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <button class="icon-button" id="notificationBtn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Authority Admin</strong>
+                    <small>Administrator</small>
+                </span>
+            </div>
+        </div>
+    </header>
+
+  <!-- ================= HORIZONTAL NAVIGATION ================= -->
+  <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link active"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="main-content">
+
+    <!-- Page utility bar -->
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Authority Portal</span>
+        <i data-lucide="chevron-right"></i>
+        <strong>Geofence Management</strong>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="topbar-date">
+          <i data-lucide="calendar-days"></i>
+          <span id="currentDate">Loading date...</span>
+        </div>
+
+        <div class="topbar-avatar" aria-label="Travel Nexus administrator">
+          TA
+        </div>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- PAGE HEADING -->
+      <section class="page-heading">
+        <div>
+          <div class="eyebrow">
+            <span class="eyebrow-line"></span>
+            LOCATION INTELLIGENCE
+          </div>
+
+          <h1>Geofence <span>Management</span></h1>
+
+          <p class="page-description">
+            Define safety boundaries, monitor zone activity, and manage
+            restricted and protected locations from one workspace.
+          </p>
+        </div>
+
+        <button class="primary-button" id="openCreateModal" type="button">
+          <i data-lucide="plus"></i>
+          Create Geofence
+        </button>
+      </section>
+
+      <div class="demo-notice">
+        <i data-lucide="info"></i>
+        <span>Manage geofence boundaries here. Open the Authority dashboard map to view all active geofences alongside live traveller tracks.</span>
+        <a class="outline-button" href="authority.html#live-map"><i data-lucide="map"></i> Go to live map</a>
+      </div>
+
+      <!-- STATISTICS -->
+      <section class="stats-grid" aria-label="Geofence statistics">
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Total Geofences</span>
+            <span class="stat-icon blue">
+              <i data-lucide="map"></i>
+            </span>
+          </div>
+
+          <div class="stat-value" id="totalZones">06</div>
+
+          <div class="stat-footer">
+            <span class="stat-foot-icon">
+              <i data-lucide="layers"></i>
+            </span>
+            <span>Configured location zones</span>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Active Zones</span>
+            <span class="stat-icon green">
+              <i data-lucide="shield-check"></i>
+            </span>
+          </div>
+
+          <div class="stat-value" id="activeZones">05</div>
+
+          <div class="stat-footer">
+            <span class="status-dot green-dot"></span>
+            <span>Zones currently enabled</span>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Travelers Inside</span>
+            <span class="stat-icon purple">
+              <i data-lucide="users"></i>
+            </span>
+          </div>
+
+          <div class="stat-value" id="travelersInside">128</div>
+
+          <div class="stat-footer">
+            <span class="stat-foot-icon purple-text">
+              <i data-lucide="map-pin"></i>
+            </span>
+            <span>Illustrative count across zones</span>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Zone Events Today</span>
+            <span class="stat-icon orange">
+              <i data-lucide="activity"></i>
+            </span>
+          </div>
+
+          <div class="stat-value" id="todayEvents">12</div>
+
+          <div class="stat-footer">
+            <span class="status-dot orange-dot"></span>
+            <span>Sample entry and exit events</span>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- GEOFENCE DIRECTORY -->
+      <section class="panel directory-panel">
+
+        <div class="panel-header directory-header">
+          <div>
+            <h2>Geofence Directory</h2>
+            <p class="panel-subtitle">
+              Search, edit, and delete configured boundaries.
+            </p>
+          </div>
+
+          <span class="result-count" id="resultCount">6 zones</span>
+        </div>
+
+        <div class="filter-toolbar">
+          <label class="directory-search">
+            <i data-lucide="search"></i>
+            <input
+              type="text"
+              id="zoneSearch"
+              placeholder="Search by zone name or location..."
+              aria-label="Search geofences"
+            >
+          </label>
+
+          <select id="typeFilter" aria-label="Filter by zone type">
+            <option value="all">All zone types</option>
+            <option value="safe">Safe zone</option>
+            <option value="caution">Caution zone</option>
+            <option value="restricted">Restricted zone</option>
+          </select>
+
+          <select id="statusFilter" aria-label="Filter by zone status">
+            <option value="all">All statuses</option>
+            <option value="active">Active</option>
+            <option value="paused">Paused</option>
+          </select>
+
+          <button
+            class="icon-button filter-reset"
+            id="clearFilters"
+            type="button"
+            title="Clear filters"
+            aria-label="Clear filters"
+          >
+            <i data-lucide="rotate-ccw"></i>
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="zone-table">
+            <thead>
+              <tr>
+                <th scope="col">ZONE NAME</th>
+                <th scope="col">ZONE TYPE</th>
+                <th scope="col">RADIUS</th>
+                <th scope="col">TRAVELERS</th>
+                <th scope="col">STATUS</th>
+                <th scope="col" class="actions-heading">ACTIONS</th>
+              </tr>
+            </thead>
+
+            <tbody id="zoneTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state hidden" id="emptyState">
+          <span class="empty-state-icon">
+            <i data-lucide="map-pinned"></i>
+          </span>
+
+          <strong>No matching geofences</strong>
+          <p>Try another search term or change your filters.</p>
+
+          <button class="outline-button" id="emptyClearFilters" type="button">
+            Clear filters
+          </button>
+        </div>
+      </section>
+
+      <!-- ACTIVITY AND SAFETY RULES -->
+      <section class="bottom-grid">
+
+        <article class="panel activity-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Recent Zone Activity</h2>
+              <p class="panel-subtitle">Illustrative activity history</p>
+            </div>
+
+            <button
+              class="icon-button"
+              id="refreshActivity"
+              type="button"
+              title="Refresh demo activity"
+              aria-label="Refresh demo activity"
+            >
+              <i data-lucide="refresh-cw"></i>
+            </button>
+          </div>
+
+          <div class="activity-list" id="activityList"></div>
+        </article>
+
+        <article class="panel rules-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Safety Rules</h2>
+              <p class="panel-subtitle">Local demo preferences</p>
+            </div>
+
+            <span class="small-icon-box">
+              <i data-lucide="sliders-horizontal"></i>
+            </span>
+          </div>
+
+          <div class="rule-row">
+            <div class="rule-copy">
+              <strong>Entry notifications</strong>
+              <small>Show a notice when a zone is entered.</small>
+            </div>
+
+            <label class="switch">
+              <input type="checkbox" id="entryRule" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="rule-row">
+            <div class="rule-copy">
+              <strong>Exit notifications</strong>
+              <small>Show a notice when a zone is exited.</small>
+            </div>
+
+            <label class="switch">
+              <input type="checkbox" id="exitRule" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="rule-row">
+            <div class="rule-copy">
+              <strong>Restricted-zone warnings</strong>
+              <small>Highlight restricted-zone activity.</small>
+            </div>
+
+            <label class="switch">
+              <input type="checkbox" id="restrictedRule" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="rules-note">
+            <i data-lucide="info"></i>
+            <span>
+              These switches change this page's demo preferences only.
+            </span>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="page-footer">
+        <span>
+          © <span id="footerYear"></span> Travel Nexus Authority Portal
+        </span>
+
+        <span>
+          <i data-lucide="shield-check"></i>
+          Geofence Management
+        </span>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ================= CREATE / EDIT MODAL ================= -->
+  <div class="modal-overlay" id="geofenceModal" aria-hidden="true">
+    <section
+      class="modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <div class="eyebrow">ZONE CONFIGURATION</div>
+          <h2 id="modalTitle">Create Geofence</h2>
+          <p>Define a zone name, boundary type, and location.</p>
+        </div>
+
+        <button class="icon-button" id="closeModal" type="button" aria-label="Close modal">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <form id="geofenceForm" action="#" novalidate onsubmit="event.preventDefault()">
+        <input type="hidden" id="editZoneId">
+
+        <div class="form-field">
+          <label for="zoneNameInput">Geofence name <span>*</span></label>
+          <input
+            type="text"
+            id="zoneNameInput"
+            maxlength="60"
+            placeholder="e.g. Central Safety Zone"
+            required
+          >
+        </div>
+
+        <div class="form-field">
+          <label for="zoneLocationInput">Location description</label>
+          <input
+            type="text"
+            id="zoneLocationInput"
+            maxlength="100"
+            placeholder="e.g. Central city area"
+          >
+        </div>
+
+        <div class="form-two-columns">
+          <div class="form-field">
+            <label for="zoneTypeInput">Zone type <span>*</span></label>
+            <select id="zoneTypeInput" required>
+              <option value="safe">Safe zone</option>
+              <option value="caution">Caution zone</option>
+              <option value="restricted">Restricted zone</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="zoneRadiusInput">Radius (metres) <span>*</span></label>
+            <input
+              type="number"
+              id="zoneRadiusInput"
+              min="0"
+              step="any"
+              value="500"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-two-columns">
+          <div class="form-field">
+            <label for="zoneLatInput">Latitude <span>*</span></label>
+            <input
+              type="number"
+              id="zoneLatInput"
+              min="-90"
+              max="90"
+              step="any"
+              placeholder="16.7050"
+              required
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="zoneLngInput">Longitude <span>*</span></label>
+            <input
+              type="number"
+              id="zoneLngInput"
+              min="-180"
+              max="180"
+              step="any"
+              placeholder="74.2433"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-hint">
+          <i data-lucide="map-pin"></i>
+          <span>
+            Enter the coordinates for the centre of this geofence.
+            You can review all geofences and tracks on the Authority dashboard map.
+          </span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="outline-button" id="cancelModal">
+            Cancel
+          </button>
+
+          <button type="submit" class="primary-button" id="saveZoneButton">
+            <i data-lucide="check"></i>
+            Save Geofence
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- ================= ZONE DETAILS MODAL ================= -->
+  <div class="modal-overlay" id="detailsModal" aria-hidden="true">
+    <section
+      class="modal-card details-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="detailsTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <div class="eyebrow">ZONE INFORMATION</div>
+          <h2 id="detailsTitle">Geofence Details</h2>
+          <p id="detailsSubtitle">Zone information</p>
+        </div>
+
+        <button
+          class="icon-button"
+          id="closeDetailsModal"
+          type="button"
+          aria-label="Close details"
+        >
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div id="detailsContent" class="details-content"></div>
+
+      <div class="modal-actions">
+        <button class="outline-button" id="detailsCloseButton" type="button">
+          Close
+        </button>
+
+        <button class="primary-button" id="editSelectedZone" type="button">
+          <i data-lucide="pencil"></i>
+          Edit Geofence
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= TOAST MESSAGE ================= -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon">
+      <i data-lucide="check-circle-2"></i>
+    </span>
+    <span id="toastMessage">Done</span>
+  </div>
+
+  <!-- Page JavaScript -->
+  <script src="../js/notifications.js?v=1"></script>
+  <script src="../js/geofences.js?v=database-geofence-refresh-2"></script>
+
+  <!-- Initialize icons and update date -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      const dateElement = document.getElementById("currentDate");
+      const yearElement = document.getElementById("footerYear");
+
+      if (dateElement) {
+        dateElement.textContent = new Intl.DateTimeFormat("en-IN", {
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        }).format(new Date());
+      }
+
+      if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+      }
+    });
+  </script>
+
+</body>
+</html>

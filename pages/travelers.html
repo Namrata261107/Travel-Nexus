@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Travel Nexus | Travelers</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/travelers.css">
+  <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+  <link rel="stylesheet" href="../css/notifications.css?v=1">
+  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+                <strong>Travel Nexus</strong>
+                <small>Authority Command Center</small>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <button class="icon-button" id="notificationBtn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Authority Admin</strong>
+                    <small>Administrator</small>
+                </span>
+            </div>
+        </div>
+    </header>
+
+<!-- Horizontal navigation shared by all Travel Nexus authority pages -->
+  <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link active"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+
+<main class="page-content">
+
+  <section class="page-heading">
+    <div>
+      <div class="eyebrow"><span></span> PEOPLE &amp; JOURNEY OVERSIGHT</div>
+      <h1>Travelers <span>Management</span></h1>
+      <p>Review registered travelers, their latest shared locations, journey status, and assistance needs.</p>
+    </div>
+
+  </section>
+
+  <section class="banner">
+    <div class="banner-left">
+      <div class="banner-icon"><i class="fa-solid fa-route"></i></div>
+      <div>
+        <strong>Traveler directory is active</strong>
+        <p>Review registered travelers and keep journey information up to date.</p>
+      </div>
+    </div>
+    <div class="banner-meta">
+      <span class="online-dot"></span> DIRECTORY ACTIVE
+      <i class="fa-regular fa-clock"></i> Updated just now
+    </div>
+  </section>
+
+<!-- Statistics -->
+<section class="stats-grid">
+
+    <!-- Total Travelers -->
+    <article class="stat-card">
+        <div class="stat-top">
+            <span>Total travelers</span>
+            <i class="fa-solid fa-users stat-icon blue"></i>
+        </div>
+
+        <strong class="stat-value" id="totalStat">0</strong>
+
+        <div class="stat-bottom">
+            <span class="positive">
+                <i class="fa-solid fa-database"></i> Live data
+            </span>
+            <span>database records</span>
+        </div>
+
+        <div class="progress">
+            <span class="blue-fill" id="totalProgress" style="width: 0%"></span>
+        </div>
+    </article>
+
+    <!-- Currently Traveling -->
+    <article class="stat-card">
+        <div class="stat-top">
+            <span>Active now</span>
+            <i class="fa-solid fa-person-walking-luggage stat-icon violet"></i>
+        </div>
+
+        <strong class="stat-value" id="activeNowStat">0</strong>
+
+        <div class="stat-bottom">
+      <span class="positive">
+                <i class="fa-solid fa-route"></i> Active
+            </span>
+            <span>location shared in the last 2 minutes</span>
+        </div>
+
+        <div class="progress">
+            <span class="violet-fill" id="activeProgress" style="width: 0%"></span>
+        </div>
+    </article>
+
+    <!-- Needs Attention -->
+    <article class="stat-card">
+        <div class="stat-top">
+            <span>Needs attention</span>
+            <i class="fa-solid fa-bell stat-icon orange"></i>
+        </div>
+
+        <strong class="stat-value" id="attentionStat">0</strong>
+
+        <div class="stat-bottom">
+            <span class="warning">
+                <i class="fa-solid fa-circle-exclamation"></i> Review
+            </span>
+            <span>assistance flagged</span>
+        </div>
+
+        <div class="progress">
+            <span class="orange-fill" id="attentionProgress" style="width: 0%"></span>
+        </div>
+    </article>
+
+    <!-- Completed Journeys -->
+    <article class="stat-card">
+        <div class="stat-top">
+            <span>Completed journeys</span>
+            <i class="fa-solid fa-circle-check stat-icon green"></i>
+        </div>
+
+        <strong class="stat-value" id="completedStat">0</strong>
+
+        <div class="stat-bottom">
+            <span class="positive">
+                <i class="fa-solid fa-check"></i> Completed
+            </span>
+            <span>finished journeys</span>
+        </div>
+
+        <div class="progress">
+            <span class="green-fill" id="completedProgress" style="width: 0%"></span>
+        </div>
+    </article>
+
+</section>
+
+
+  <!-- Traveler directory -->
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <div class="section-label">TRAVELER DIRECTORY</div>
+        <h2>
+          Registered travelers
+          <span class="count" id="recordCount">6 records</span>
+          <span class="count" id="activeRecordCount">0 active</span>
+        </h2>
+        <p>Search traveler records or filter by journey status and destination.</p>
+      </div>
+      <button class="btn btn-outline" id="refreshBtn">
+        <i class="fa-solid fa-rotate"></i> Refresh view
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <label class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search name, traveler ID, destination..."
+          autocomplete="off"
+        >
+        <kbd>Ctrl K</kbd>
+      </label>
+
+      <div class="filters">
+        <label class="filter-box">
+          <i class="fa-solid fa-filter"></i>
+          <select id="statusFilter" aria-label="Filter status">
+            <option value="all">All statuses</option>
+            <option value="traveling">Traveling</option>
+            <option value="safe">Safe</option>
+            <option value="attention">Needs attention</option>
+            <option value="completed">Completed</option>
+          </select>
+        </label>
+
+        <label class="filter-box">
+          <i class="fa-solid fa-location-dot"></i>
+          <select id="destinationFilter" aria-label="Filter destination">
+            <option value="all">All destinations</option>
+            <option>Kolhapur</option>
+            <option>Pune</option>
+            <option>Mumbai</option>
+            <option>Goa</option>
+            <option>Nashik</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>TRAVELER</th>
+            <th>DESTINATION</th>
+            <th>JOURNEY DATE</th>
+            <th>JOURNEY STATUS</th>
+            <th>SAFETY STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody id="travelerRows"></tbody>
+      </table>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <span><i class="fa-solid fa-magnifying-glass"></i></span>
+        <h3>No travelers found</h3>
+        <p>Try another search term or change your filters.</p>
+        <button class="btn btn-outline" id="clearFilters">Clear filters</button>
+      </div>
+    </div>
+
+    <div class="table-footer">
+      <span id="tableSummary">Showing 6 of 6 travelers</span>
+      <div class="pagination">
+        <button disabled aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="current">1</button>
+        <button disabled aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <span class="protected"><i class="fa-solid fa-shield-halved"></i> Protected traveler records</span>
+    </div>
+  </section>
+
+  <!-- Overview and activity -->
+  <section class="lower-grid">
+    <article class="panel insight-panel">
+      <div class="lower-heading">
+        <span class="lower-icon purple"><i class="fa-solid fa-chart-pie"></i></span>
+        <div>
+          <h3>Traveler status overview</h3>
+        <p>Live traveler directory statistics</p>
+        </div>
+      </div>
+
+      <div class="chart-area">
+        <div class="donut">
+    <div>
+        <strong id="chartTotal">0</strong>
+        <small>Travelers</small>
+    </div>
+</div>
+
+        <div class="legend">
+          <div><span><i class="dot dot-blue"></i> Traveling</span><b><span id="chartTraveling">0</span> <small id="chartTravelingPercent">0%</small></b></div>
+          <div><span><i class="dot dot-green"></i> Safe</span><b><span id="chartSafe">0</span> <small id="chartSafePercent">0%</small></b></div>
+          <div><span><i class="dot dot-orange"></i> Needs attention</span><b><span id="chartAttention">0</span> <small id="chartAttentionPercent">0%</small></b></div>
+          <div><span><i class="dot dot-gray"></i> Completed</span><b><span id="chartCompleted">0</span> <small id="chartCompletedPercent">0%</small></b></div>
+        </div>
+      </div>
+
+      <p class="demo-note">
+        <i class="fa-solid fa-circle-info"></i>
+        Counts are based on registered traveler records and their latest reported status.
+      </p>
+    </article>
+
+    <article class="panel activity-panel">
+      <div class="lower-heading">
+        <span class="lower-icon teal"><i class="fa-solid fa-clock-rotate-left"></i></span>
+        <div>
+          <h3>Recent activity</h3>
+          <p>Latest directory updates</p>
+        </div>
+      </div>
+
+      <div class="activity-list" id="recentActivityList" aria-live="polite">
+        <p>Loading recent registered traveler activity…</p>
+      </div>
+    </article>
+  </section>
+
+  <footer class="page-footer">
+    <span>© 2026 Travel Nexus <b>·</b> Authority Console</span>
+    <span><i class="fa-solid fa-lock"></i> Secure workspace <b>·</b> Registered traveler data</span>
+  </footer>
+</main>
+
+<!-- Traveler details modal -->
+<div class="modal-backdrop" id="detailsModal" hidden>
+  <section class="modal details-modal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+    <div class="modal-head">
+      <div>
+        <span class="section-label">TRAVELER PROFILE</span>
+        <h2 id="detailsTitle">Traveler details</h2>
+        <p>Directory record and current journey information.</p>
+      </div>
+      <button class="close-btn" id="closeDetails" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div id="detailsContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-light" id="closeDetailsFooter">Close</button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <i class="fa-solid fa-circle-check"></i><span id="toastText">Done</span>
+</div>
+<script src="../js/notifications.js?v=1"></script>
+<script src="../js/travelers.js"></script>
+</body>
+</html>

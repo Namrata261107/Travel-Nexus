@@ -1,0 +1,315 @@
+<section class="page-section active-section" id="dashboard">
+
+    <div class="page-header">
+        <div class="page-title">
+            <h1>Traveler Dashboard</h1>
+            <p id="travelerWelcome">Welcome back. Your travel safety at a glance.</p>
+        </div>
+
+        <div class="location-status is-off" id="locationTrackingBadge">
+            <span class="online-dot"></span>
+            Location sharing off
+        </div>
+    </div>
+
+    <div class="cards dashboard-cards">
+
+        <div class="card dashboard-card">
+            <div class="card-top">
+                <div class="card-title">CURRENT LOCATION</div>
+                <div class="card-icon">📍</div>
+            </div>
+
+            <div class="card-value dashboard-place" id="dashboardPlace">
+                Not shared
+            </div>
+
+            <p class="dashboard-card-note" id="dashboardLocationAddress">
+                Share your location to see your current place.
+            </p>
+        </div>
+
+        <div class="card dashboard-card">
+            <div class="card-top">
+                <div class="card-title">LATITUDE</div>
+                <div class="card-icon">🌐</div>
+            </div>
+
+            <div class="card-value" id="dashboardLatitude">
+                Not shared
+            </div>
+
+            <p class="dashboard-card-note">Current GPS coordinates</p>
+        </div>
+
+        <div class="card dashboard-card">
+            <div class="card-top">
+                <div class="card-title">LONGITUDE</div>
+                <div class="card-icon">🧭</div>
+            </div>
+
+            <div class="card-value" id="dashboardLongitude">
+                Not shared
+            </div>
+
+            <p class="dashboard-card-note">Current GPS coordinates</p>
+        </div>
+
+        <div class="card dashboard-card">
+            <div class="card-top">
+                <div class="card-title">SAFETY STATUS</div>
+                <div class="card-icon">🛡️</div>
+            </div>
+
+            <div class="card-value" id="dashboardStatus">
+                Not checked
+            </div>
+
+            <p class="dashboard-card-note" id="dashboardSafetyNote">
+                Share your location to check nearby safety zones.
+            </p>
+        </div>
+
+    </div>
+
+    <section class="content-card location-share-card" aria-labelledby="travelerSafetyMapTitle">
+        <div class="location-share-heading">
+            <div>
+                <h2 id="travelerSafetyMapTitle">Live safety map</h2>
+                <p>See your shared location and active Authority geofences together.</p>
+            </div>
+            <div class="location-share-actions">
+                <button type="button" class="primary-button" id="startLocationButton">Share my location</button>
+                <button type="button" class="secondary-button" id="stopLocationButton" disabled>Stop sharing</button>
+            </div>
+        </div>
+        <p class="location-share-status" id="locationSharingStatus" role="status" aria-live="polite">Location sharing is off.</p>
+        <p class="location-share-status" id="dashboardGeofenceStatus" role="status" aria-live="polite">Loading active safety zones…</p>
+        <p class="location-share-status" id="locationAccuracy">Location accuracy will appear after sharing starts.</p>
+        <div id="travelerDashboardMap" role="region" aria-label="Map showing your location and Authority geofences"></div>
+    </section>
+
+    <!-- TRAVEL READINESS -->
+<div class="content-card travel-readiness">
+
+    <div class="section-heading">
+        <div>
+            <h2>Travel Readiness</h2>
+            <p>Check your location tracking and safety information.</p>
+        </div>
+
+        <span class="readiness-badge">TRAVEL CHECK</span>
+    </div>
+
+    <div class="readiness-grid">
+
+        <div class="readiness-item">
+            <div class="readiness-icon">📡</div>
+
+            <div>
+                <h3>GPS Tracking</h3>
+                <p>Monitor your current location.</p>
+                <span id="dashboardGpsInfo">Waiting for GPS</span>
+            </div>
+        </div>
+
+        <div class="readiness-item">
+            <div class="readiness-icon">🛡️</div>
+
+            <div>
+                <h3>Geofence Protection</h3>
+                <p>Configured restricted-zone radius.</p>
+                <span>500 metres</span>
+            </div>
+        </div>
+
+        <div class="readiness-item">
+            <div class="readiness-icon">📍</div>
+
+            <div>
+                <h3>Last Location Update</h3>
+                <p>Time of the latest GPS update.</p>
+                <span id="dashboardLastUpdated">Waiting for update</span>
+            </div>
+        </div>
+
+        <div class="readiness-item">
+            <div class="readiness-icon">🧭</div>
+
+            <div>
+                <h3>Travel Assistance</h3>
+                <p>Get help with travel-related questions.</p>
+
+                <button
+                    type="button"
+                    class="text-action"
+                    onclick="showSection('ai-assistant')">
+                    Ask AI Assistant →
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TRAVEL SAFETY TIPS -->
+<div class="content-card safety-tips-section">
+
+    <div class="section-heading">
+        <div>
+            <h2>Travel Safety Tips</h2>
+            <p>Small precautions can help you travel more confidently.</p>
+        </div>
+
+        <span class="tips-icon">✨</span>
+    </div>
+
+    <div class="safety-tips-grid">
+
+        <div class="safety-tip-card">
+            <div class="tip-icon">📱</div>
+            <h3>Keep Your Phone Ready</h3>
+            <p>
+                Keep your phone charged and make sure you can access
+                important contacts when needed.
+            </p>
+        </div>
+
+        <div class="safety-tip-card">
+            <div class="tip-icon">👥</div>
+            <h3>Share Your Plans</h3>
+            <p>
+                Consider sharing your itinerary with someone you trust,
+                especially when travelling alone.
+            </p>
+        </div>
+
+        <div class="safety-tip-card">
+            <div class="tip-icon">📍</div>
+            <h3>Check Your Location</h3>
+            <p>
+                Check that location permissions are enabled when you
+                want Travel Nexus to update your position.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TRAVEL CHECKLIST -->
+<div class="content-card travel-checklist">
+
+    <div class="section-heading">
+        <div>
+            <h2>Travel Checklist</h2>
+            <p>Review these essentials before starting your journey.</p>
+        </div>
+
+        <span class="checklist-icon">✅</span>
+    </div>
+
+    <div class="checklist-items">
+
+        <label class="checklist-item">
+            <input type="checkbox">
+            <span>Phone charged and ready</span>
+        </label>
+
+        <label class="checklist-item">
+            <input type="checkbox">
+            <span>Important contacts accessible</span>
+        </label>
+
+        <label class="checklist-item">
+            <input type="checkbox">
+            <span>Travel documents checked</span>
+        </label>
+
+        <label class="checklist-item">
+            <input type="checkbox">
+            <span>Location permission checked</span>
+        </label>
+
+    </div>
+
+    <p class="checklist-note">
+        These are personal reminders, not automatic safety checks.
+    </p>
+
+</div>
+
+    <div class="content-card dashboard-overview">
+
+        <div class="dashboard-overview-heading">
+            <div>
+                <h2>Travel Safety Overview</h2>
+                <p>Quick access to your travel protection features.</p>
+            </div>
+
+            <span class="dashboard-live-badge">
+                <span class="online-dot"></span>
+                LIVE MONITORING
+            </span>
+        </div>
+
+        <div class="feature-grid dashboard-feature-grid">
+
+            <div class="feature-card dashboard-feature-card">
+                <div class="icon">📍</div>
+                <h3>Geofence Protection</h3>
+                <p>Monitor your location and check restricted zones.</p>
+
+                <button type="button"
+        class="primary-button dashboard-action"
+        data-target="geofence"
+        onclick="showSection('geofence')">
+    View Geofence →
+</button>
+            </div>
+
+            <div class="feature-card dashboard-feature-card">
+                <div class="icon">🔎</div>
+                <h3>Lost &amp; Found</h3>
+                <p>Report lost belongings and search found items.</p>
+
+                <button type="button"
+        class="primary-button dashboard-action"
+        data-target="lost-found"
+        onclick="showSection('lost-found')">
+    Open Lost &amp; Found →
+</button>
+            </div>
+
+            <div class="feature-card dashboard-feature-card">
+                <div class="icon">🤖</div>
+                <h3>AI Assistant</h3>
+                <p>Get assistance with travel-related questions.</p>
+
+                <button type="button"
+        class="primary-button dashboard-action"
+        data-target="ai-assistant"
+        onclick="showSection('ai-assistant')">
+    Ask Assistant →
+</button>
+            </div>
+
+            <div class="feature-card dashboard-feature-card">
+                <div class="icon">🔔</div>
+                <h3>Travel Alerts</h3>
+                <p>Review safety warnings and important updates.</p>
+
+                <button type="button"
+        class="primary-button dashboard-action"
+        data-target="alerts"
+        onclick="showSection('alerts')">
+    View Alerts →
+</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

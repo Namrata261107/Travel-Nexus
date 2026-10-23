@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Nexus | Traveller</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css?v=signout-1">
+  <link rel="stylesheet" href="css/modules/dashboard.css">
+  <link rel="stylesheet" href="css/modules/geofence.css">
+  <link rel="stylesheet" href="css/modules/live-location.css">
+  <link rel="stylesheet" href="css/modules/lost-found.css?v=shared-reports-3">
+  <link rel="stylesheet" href="css/modules/person-reports.css?v=person-reports-2">
+  <link rel="stylesheet" href="css/modules/ai-assistant.css">
+  <link rel="stylesheet" href="css/modules/alerts.css">
+  <link rel="stylesheet" href="css/modules/profile.css">
+</head>
+<body data-required-role="traveler">
+<nav class="navbar">
+<div class="logo">
+<div class="logo-icon">
+            🛡️
+        </div>
+<div>
+            Travel <span>Nexus</span>
+</div>
+</div>
+<ul class="nav-links">
+<li>
+<a class="nav-item active" data-section="dashboard">
+                Dashboard
+            </a>
+</li>
+<li>
+<a class="nav-item" data-section="geofence">
+                Geofence
+            </a>
+</li>
+<li>
+<a class="nav-item" data-section="lost-found">
+                Lost &amp; Found
+            </a>
+</li>
+<li>
+<a class="nav-item" data-section="person-reports">
+                Safety Reports
+            </a>
+</li>
+<li>
+<a class="nav-item" data-section="ai-assistant">
+                AI Assistant
+            </a>
+</li>
+<li>
+<a class="nav-item" data-section="alerts">
+                Alerts
+            </a>
+</li>
+</ul>
+
+<!-- NOTIFICATION CENTER -->
+<div class="tn-notification-center" id="tnNotificationCenter">
+
+    <button
+        type="button"
+        class="tn-notification-bell"
+        id="tnNotificationBell"
+        aria-label="Open notifications"
+        aria-expanded="false"
+        aria-controls="tnNotificationDropdown">
+
+        <span aria-hidden="true">🔔</span>
+        <span class="tn-notification-badge" id="tnNotificationBadge" hidden>0</span>
+
+    </button>
+
+    <div
+        class="tn-notification-dropdown"
+        id="tnNotificationDropdown"
+        hidden>
+
+        <div class="tn-dropdown-header">
+            <div>
+                <h3>Notifications</h3>
+                <p id="tnNotificationSummary">Your latest updates</p>
+            </div>
+
+            <button
+                type="button"
+                id="tnMarkAllRead"
+                class="tn-mark-all-read">
+                Mark all read
+            </button>
+        </div>
+
+        <div class="tn-notification-list" id="tnNotificationList">
+            <div class="tn-notification-empty">
+                <span>🔔</span>
+                <p>No notifications yet</p>
+                <small>New safety alerts and Authority messages will appear here.</small>
+            </div>
+        </div>
+
+        <button
+            type="button"
+            class="tn-view-all-notifications"
+            id="tnViewAllNotifications">
+            View All Alerts
+        </button>
+
+    </div>
+
+</div>
+
+<!-- PROFILE BUTTON -->
+<div class="traveler-profile" id="profileButton">
+    <div class="avatar" id="headerUserAvatar">U</div>
+    <span id="headerUserName">User</span>
+</div>
+<button class="traveler-signout" id="travelerSignOutButton" type="button">
+    Sign out
+</button>
+
+</nav>
+<main class="container" id="mainContainer">
+  <div id="moduleHost" aria-live="polite">
+    <div class="module-loading">Loading Travel Nexus modules…</div>
+  </div>
+</main>
+<footer class="tn-minimal-footer">
+    <div class="tn-footer-inner">
+
+        <div class="tn-footer-brand">
+            <span class="tn-footer-symbol">✦</span>
+            <span>Travel <strong>Nexus</strong></span>
+        </div>
+
+        <span class="tn-footer-divider">•</span>
+
+        <span class="tn-footer-message">
+            Making every journey safer
+        </span>
+
+        <span class="tn-footer-divider">•</span>
+
+        <span class="tn-footer-copyright">
+            © <span id="tn-year"></span> Travel Nexus
+        </span>
+
+        <span class="tn-footer-divider">•</span>
+
+        <span class="tn-footer-tagline">
+            Explore freely. Travel safely.
+        </span>
+
+    </div>
+</footer>
+
+<script>
+    document.getElementById("tn-year").textContent =
+        new Date().getFullYear();
+</script>
+<button class="sos-button" onclick="sendSOS()" title="Emergency SOS">
+
+    🚨
+
+</button>
+<div aria-describedby="sosModalDescription" aria-labelledby="sosModalTitle" aria-modal="true" class="sos-confirmation-overlay" id="sosConfirmationModal" onclick="closeSOSModal(event)" role="dialog">
+<div class="sos-confirmation-card" onclick="event.stopPropagation()">
+<button aria-label="Close SOS confirmation" class="sos-modal-close" onclick="closeSOSModal()" type="button">×</button>
+<div aria-hidden="true" class="sos-modal-emblem"><span>!</span></div>
+<div class="sos-modal-eyebrow"><span class="sos-live-dot"></span> TRAVEL NEXUS · SAFETY CENTER</div>
+<h2 id="sosModalTitle">SOS alert initiated</h2>
+<p class="sos-modal-intro" id="sosModalDescription">Your emergency request details are ready. Please contact local emergency services if you need immediate help.</p>
+<div class="sos-modal-status"><span class="sos-status-check">✓</span><div><strong>SOS request recorded in this demo</strong><small>Authority notification is not connected to a backend yet.</small></div></div>
+<div class="sos-location-panel">
+<div class="sos-location-heading"><span class="sos-location-pin">⌖</span><div><strong>Traveler &amp; location</strong><small>Details captured from your dashboard</small></div></div>
+<div class="sos-detail-row"><span>Traveler</span><strong id="sosModalTraveler">—</strong></div>
+<div class="sos-detail-row"><span>Traveler ID</span><strong id="sosModalTravelerId">—</strong></div>
+<div class="sos-detail-row"><span>Latitude</span><strong id="sosModalLatitude">—</strong></div>
+<div class="sos-detail-row"><span>Longitude</span><strong id="sosModalLongitude">—</strong></div>
+<button type="button"
+        id="sosNotificationDoneButton"
+        class="primary-button sos-done-button">
+    Done
+</button>
+</div>
+<button class="sos-modal-primary" onclick="closeSOSModal()" type="button">Notification Send <span aria-hidden="true"></span></button>
+<button class="sos-modal-secondary" onclick="closeSOSModal(); showSection('alerts');" type="button">Open safety alerts</button>
+</div>
+</div>
+<div class="action-modal" id="actionModal" onclick="closeActionModal(event)">
+<div class="action-modal-content" onclick="event.stopPropagation()">
+<div class="action-modal-header">
+<h2 id="actionModalTitle">Travel Nexus</h2>
+<button class="close-modal" onclick="closeActionModal()">×</button>
+</div>
+<div id="actionModalBody"></div>
+</div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
+<script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
+
+<!-- Supabase JavaScript library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- Travel Nexus Supabase client -->
+<script src="js/supabase-client.js"></script>
+
+<!-- Initialize Supabase before loading application modules -->
+<script>
+    const supabaseInitialized = window.initializeSupabaseClient();
+
+    console.log("Initialization result:", supabaseInitialized);
+    console.log(
+        "Supabase client available:",
+        window.travelNexusSupabase !== null &&
+        window.travelNexusSupabase !== undefined
+    );
+</script>
+
+<script src="../js/dashboard-auth.js"></script>
+
+<script>
+    if (window.travelNexusSupabase) {
+        window.travelNexusSupabase
+            .from("profiles")
+            .select("id")
+            .limit(1)
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error(
+                        "Supabase database test failed:",
+                        error.message
+                    );
+                } else {
+                    console.log("Supabase database test successful.");
+                    console.log("Rows returned:", data.length);
+                }
+            });
+    } else {
+        console.error(
+            "Supabase client is unavailable. Check js/supabase-client.js."
+        );
+    }
+</script>
+
+<script>
+    document.getElementById("travelerSignOutButton")?.addEventListener("click", async () => {
+        try {
+            const { error } = await window.travelNexusSupabase.auth.signOut();
+            if (error) throw error;
+            window.location.replace("../pages/login.html");
+        } catch (error) {
+            console.error("Sign-out failed:", error);
+            window.alert(error.message || "Unable to sign out. Please try again.");
+        }
+    });
+</script>
+
+<!-- Existing module loader: keep this -->
+<script src="js/module-loader.js?v=shared-reports-4"></script>
+</body>
+</html>

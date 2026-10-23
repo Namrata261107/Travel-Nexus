@@ -1,0 +1,328 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7ff">
+  <title>Travel Nexus | AI Assistant</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/assistant.css">
+  <script src="../js/assistant.js" defer></script>
+  <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+  <link rel="stylesheet" href="../css/notifications.css?v=1">
+  <script src="../js/notifications.js" defer></script>
+</head>
+
+<body>
+  <div class="app-shell">
+
+   <div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span>
+                <strong>Travel Nexus</strong>
+                <small>Authority Command Center</small>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <button class="icon-button" id="notificationBtn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Authority Admin</strong>
+                    <small>Administrator</small>
+                </span>
+            </div>
+        </div>
+    </header>
+    <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+   <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link active"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+
+    <main class="page-content">
+
+      <!-- PAGE INTRO -->
+      <section class="page-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-sparkle">✦</span> INTELLIGENCE WORKSPACE</div>
+          <h1>Your AI <span class="gradient-text">Assistant.</span></h1>
+          <p class="page-description">
+            Ask questions, explore operational information, and get assistance
+            with your Travel Nexus workflow.
+          </p>
+        </div>
+
+        <div class="heading-actions">
+          <div class="assistant-status">
+            <span class="status-dot"></span>
+            <span>Assistant online</span>
+          </div>
+          <button type="button" class="secondary-button" id="clearChatBtn">
+            <span>↺</span> New conversation
+          </button>
+        </div>
+      </section>
+
+      <!-- HERO BANNER -->
+      <section class="welcome-banner">
+        <div class="banner-orb orb-one"></div>
+        <div class="banner-orb orb-two"></div>
+        <div class="banner-content">
+          <div class="ai-symbol">
+            <span>✳</span>
+            <i></i>
+          </div>
+          <div class="banner-copy">
+            <span class="banner-kicker">TRAVEL NEXUS INTELLIGENCE</span>
+            <h2>Good decisions start with the right questions.</h2>
+            <p>
+              I'm your operational assistant. Ask me about dashboard workflows,
+              traveler management, alerts, and reports.
+            </p>
+          </div>
+        </div>
+        <div class="banner-decoration" aria-hidden="true">
+          <div class="decoration-ring ring-one"></div>
+          <div class="decoration-ring ring-two"></div>
+          <div class="decoration-core">✦</div>
+        </div>
+      </section>
+
+      <!-- WORKSPACE -->
+      <section class="workspace">
+
+        <!-- CHAT PANEL -->
+        <div class="chat-panel">
+          <div class="chat-panel-header">
+            <div class="chat-title-group">
+              <div class="mini-ai-icon">✳</div>
+              <div>
+                <h3>AI Conversation</h3>
+                <p><span class="status-dot"></span> Ready to assist</p>
+              </div>
+            </div>
+
+            <div class="chat-header-actions">
+              <span class="mode-label"><span>✦</span> Assistant mode</span>
+              <button type="button" class="icon-button" id="clearChatIcon"
+                title="Clear conversation" aria-label="Clear conversation">↺</button>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <div class="date-divider"><span>YOUR WORKSPACE</span></div>
+
+            <div class="message-row assistant-message">
+              <div class="message-avatar">✳</div>
+              <div class="message-content">
+                <div class="message-meta">
+                  <strong>Nexus AI</strong>
+                  <span class="message-time">Just now</span>
+                </div>
+                <div class="message-bubble">
+                  <p>Hello! Welcome to your Travel Nexus AI workspace. 👋</p>
+                  <p>
+                    I can help you understand the available dashboard features,
+                    organize operational tasks, and navigate your workflow.
+                    What would you like to explore today?
+                  </p>
+                  <div class="message-tags">
+                    <span>Travel operations</span>
+                    <span>Dashboard guidance</span>
+                    <span>Safety zones</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROMPTS -->
+          <div class="suggestions-area">
+            <div class="suggestions-heading">
+              <span>✧</span> Try asking
+            </div>
+            <div class="suggestion-list">
+              <button class="suggestion-chip" type="button"
+                data-prompt="Explain the Travel Nexus dashboard">
+                <span>▦</span> Explain dashboard
+              </button>
+              <button class="suggestion-chip" type="button"
+                data-prompt="How should I handle an alert?">
+                <span>♧</span> Handle an alert
+              </button>
+              <button class="suggestion-chip" type="button"
+                data-prompt="How do I manage traveler records?">
+                <span>♙</span> Traveler management
+              </button>
+              <button class="suggestion-chip" type="button"
+                data-prompt="How can I prepare an operational report?">
+                <span>▤</span> Create a report
+              </button>
+            </div>
+          </div>
+
+          <!-- MESSAGE COMPOSER -->
+          <form class="chat-composer" id="chatForm">
+            <label class="sr-only" for="chatInput">Type your message</label>
+            <textarea id="chatInput" name="message"
+              placeholder="Ask Nexus AI anything about your workflow..."
+              rows="1" maxlength="2000" required></textarea>
+
+            <div class="composer-footer">
+              <div class="composer-hint">
+                <span class="hint-sparkle">✦</span>
+                <span>Be specific for more useful guidance</span>
+              </div>
+              <div class="composer-actions">
+                <span class="character-count" id="characterCount">0 / 2000</span>
+                <button type="submit" class="send-button" id="sendButton">
+                  <span>Send message</span>
+                  <span class="send-arrow">↗</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div class="privacy-note">
+            <span>ⓘ</span>
+            Demo assistant: responses are illustrative. Connect an AI backend
+            for real AI-generated answers and live system data.
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE: QUICK TOOLS -->
+        <aside class="tools-column">
+
+          <div class="side-card quick-tools-card">
+            <div class="side-card-heading">
+              <div>
+                <span class="card-eyebrow">WORKSPACE</span>
+                <h3>Quick access</h3>
+              </div>
+              <span class="heading-icon">↗</span>
+            </div>
+
+            <a href="authority.html" class="quick-link">
+              <div class="quick-link-icon icon-dashboard">▦</div>
+              <div class="quick-link-copy">
+                <strong>Dashboard</strong>
+                <span>View the overview</span>
+              </div>
+              <span class="quick-chevron">›</span>
+            </a>
+
+            <a href="alerts.html" class="quick-link">
+              <div class="quick-link-icon icon-alerts">♧</div>
+              <div class="quick-link-copy">
+                <strong>Alerts center</strong>
+                <span>Review alert records</span>
+              </div>
+              <span class="quick-chevron">›</span>
+            </a>
+
+            <a href="travelers.html" class="quick-link">
+              <div class="quick-link-icon icon-travelers">♙</div>
+              <div class="quick-link-copy">
+                <strong>Travelers</strong>
+                <span>Manage traveler records</span>
+              </div>
+              <span class="quick-chevron">›</span>
+            </a>
+
+            <a href="geofences.html" class="quick-link">
+              <div class="quick-link-icon icon-reports">◎</div>
+              <div class="quick-link-copy">
+                <strong>Geofences</strong>
+                <span>Manage safety zones</span>
+              </div>
+              <span class="quick-chevron">›</span>
+            </a>
+          </div>
+
+          <div class="side-card capability-card">
+            <div class="side-card-heading">
+              <div>
+                <span class="card-eyebrow">BUILT FOR YOUR WORKFLOW</span>
+                <h3>How I can help</h3>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-icon">✧</div>
+              <div>
+                <strong>Explain</strong>
+                <p>Understand features and workflows.</p>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-icon">⌘</div>
+              <div>
+                <strong>Guide</strong>
+                <p>Get step-by-step navigation help.</p>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-icon">▤</div>
+              <div>
+                <strong>Organize</strong>
+                <p>Plan reports and operational tasks.</p>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-icon">◎</div>
+              <div>
+                <strong>Clarify</strong>
+                <p>Understand alerts and records.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="help-note">
+            <div class="help-note-icon">i</div>
+            <div>
+              <strong>Important</strong>
+              <p>
+                Verify critical alerts and identity-related information
+                through authorized records and human review.
+              </p>
+            </div>
+          </div>
+
+        </aside>
+      </section>
+
+      <footer class="page-footer">
+        <span>© 2026 Travel Nexus</span>
+        <span>AI Assistance <span class="footer-separator">•</span> Authority Console</span>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

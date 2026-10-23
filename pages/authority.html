@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">.\venv\Scripts\Activate.ps1
+  <title>Travel Nexus | Authority Dashboard</title>
+
+  <link rel="stylesheet" href="../css/authority.css?v=brand-logo-1">
+  <link rel="stylesheet" href="../css/common.css?v=sticky-nav-2">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet map -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css"
+  >
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+</head>
+
+<body data-required-role="authority">
+  <div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <a href="authority.html" class="brand">
+            <img class="brand-logo" src="../logo.png" alt="Travel Nexus">
+            <span>
+                <strong>Authority Command Center</strong>
+            </span>
+        </a>
+
+        <div class="header-right">
+            <span class="system-status">
+                <span class="online-dot"></span> System Online
+            </span>
+            <div class="notification-anchor">
+            <button class="icon-button" id="notificationButton" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-count" hidden>0</span>
+            </button>
+            <section class="floating-panel notification-panel" id="notificationPanel" hidden>
+                <div class="panel-heading"><strong>Recent notifications</strong><button class="text-button" id="markAllRead" type="button">Mark all read</button></div>
+                <div id="notificationItems" aria-live="polite"><p class="notification-empty">Loading recent notifications…</p></div>
+            </section>
+            </div>
+            <div class="admin-profile">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong id="authorityDisplayName">Authority</strong>
+                    <small>Authority account</small>
+                </span>
+            </div>
+            <button class="button button-secondary" id="signOutButton" type="button">
+                Sign out
+            </button>
+        </div>
+    </header>
+ <!-- FULL-WIDTH HORIZONTAL NAVIGATION -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="authority.html" class="nav-link active"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="alerts.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
+        <a href="geofences.html" class="nav-link"><i class="fa-solid fa-draw-polygon"></i> Geofences</a>
+        <a href="travelers.html" class="nav-link"><i class="fa-solid fa-users"></i> Travelers</a>
+        <a href="lostfound.html" class="nav-link"><i class="fa-solid fa-magnifying-glass-location"></i> Lost &amp; Found</a>
+        <a href="assistant.html" class="nav-link"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <a href="face-recognition.html" class="nav-link"><i class="fa-solid fa-user-check"></i> Face Recognition</a>
+        <a href="setting.html" class="nav-link" aria-current="page"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+
+  <main class="page-container">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">AUTHORITY CONTROL CENTER</p>
+        <h1>Dashboard Overview</h1>
+        <p class="page-subtitle">Monitor traveler safety, alerts, and tourism activity.</p>
+      </div>
+      <div class="heading-actions">
+        <span class="last-updated" id="lastUpdated">Updated just now</span>
+        <button class="button button-secondary" id="enableAlertSoundButton" type="button"
+          title="Allow this dashboard to play a sound when a new traveler SOS arrives">
+          Enable SOS sound
+        </button>
+        <button class="button button-primary" id="refreshButton">
+          <i data-lucide="refresh-cw"></i> Refresh
+        </button>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="Dashboard statistics">
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Registered Travelers</span>
+          <span class="stat-icon blue"><i data-lucide="users"></i></span>
+        </div>
+        <div class="stat-value" id="totalTravelers">—</div>
+        <div class="stat-foot">Registered traveler profiles</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Recent Locations</span>
+          <span class="stat-icon green"><i data-lucide="user-check"></i></span>
+        </div>
+        <div class="stat-value" id="activeTravelers">—</div>
+        <div class="stat-foot">Updated within the last 2 minutes</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Open Alerts</span>
+          <span class="stat-icon red"><i data-lucide="siren"></i></span>
+        </div>
+        <div class="stat-value" id="openAlerts">—</div>
+        <div class="stat-foot"><span class="trend negative">Requires attention</span></div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">Monitored Zones</span>
+          <span class="stat-icon purple"><i data-lucide="map-pinned"></i></span>
+        </div>
+        <div class="stat-value" id="monitoredZones">—</div>
+        <div class="stat-foot">Active geofences</div>
+      </article>
+    </section>
+
+    <section class="dashboard-grid map-dashboard-grid" id="live-map">
+      <article class="content-card map-card">
+        <div class="card-heading">
+          <div>
+            <h2><i data-lucide="map-pin"></i> Live safety map</h2>
+            <p>Traveler markers show the latest shared GPS location. Active geofences are drawn as colored circles.</p>
+          </div>
+          <div class="map-heading-actions">
+            <span class="live-badge" id="mapStatus" role="status" aria-live="polite">Loading live locations</span>
+            <span class="live-badge" id="geofenceMapStatus" role="status" aria-live="polite">Loading safety zones</span>
+            <button class="icon-button small" id="locateButton" title="Show all geofences and traveller tracks" aria-label="Show all geofences and traveller tracks">
+              <i data-lucide="crosshair"></i>
+            </button>
+          </div>
+        </div>
+        <div id="realMap" role="application" aria-label="Map showing monitored traveler locations"></div>
+        <div class="map-legend">
+          <span><i class="legend-dot safe"></i> Safe</span>
+          <span><i class="legend-dot warning"></i> Needs attention</span>
+          <span><i class="legend-dot danger"></i> Emergency</span>
+          <span><i class="legend-dot geofence-legend"></i> Active geofence</span>
+          <strong class="map-live-summary" id="mapTravelerSummary" role="status" aria-live="polite">Loading traveler status</strong>
+        </div>
+      </article>
+
+    </section>
+
+    <section class="content-card alerts-card dashboard-alerts-card">
+      <div class="card-heading">
+        <div>
+          <h2><i data-lucide="bell-ring"></i> Recent Alerts</h2>
+          <p>Latest events requiring attention</p>
+        </div>
+        <a class="view-all" href="alerts.html">View all <i data-lucide="arrow-up-right"></i></a>
+      </div>
+
+      <div class="alert-list" id="recentAlerts">
+        <div class="empty-state"><strong>Loading alerts...</strong></div>
+      </div>
+    </section>
+
+    <section class="content-card travelers-card">
+      <div class="card-heading travelers-heading">
+        <div>
+          <h2><i data-lucide="users"></i> Traveler Directory</h2>
+          <p>New traveler accounts and shared locations update automatically.</p>
+        </div>
+        <div class="traveler-actions">
+          <label class="search-box" for="travelerSearch">
+            <i data-lucide="search"></i>
+            <input id="travelerSearch" type="search" placeholder="Search travelers..." autocomplete="off">
+          </label>
+          <select id="statusFilter" class="select-control" aria-label="Filter by traveler status">
+            <option value="all">All statuses</option>
+            <option value="safe">Safe</option>
+            <option value="attention">Attention</option>
+            <option value="emergency">Emergency</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="traveler-table">
+          <thead>
+            <tr>
+              <th>Traveler</th>
+              <th>Traveler ID</th>
+              <th>Current Location</th>
+              <th>Status</th>
+              <th>Last Updated</th>
+              <th class="align-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="travelerTableBody">
+            <!-- Rows are created by authority.js -->
+          </tbody>
+        </table>
+        <div class="empty-state" id="emptyState" hidden>
+          <i data-lucide="search-x"></i>
+          <strong>No travelers found</strong>
+          <p>Try changing the search term or status filter.</p>
+        </div>
+      </div>
+
+      <div class="table-footer">
+        <span id="tableSummary">Showing travelers</span>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>© <span id="currentYear"></span> Travel Nexus Authority Portal</span>
+      <span><span class="status-dot"></span> System status: Operational</span>
+    </footer>
+  </main>
+
+  <!-- Traveler details dialog -->
+  <dialog class="app-dialog" id="travelerDialog">
+    <div class="dialog-heading">
+      <div><p class="eyebrow">TRAVELER INFORMATION</p><h2>Traveler Details</h2></div>
+      <button class="icon-button" data-close-dialog="travelerDialog" aria-label="Close dialog">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div id="travelerDialogContent" class="dialog-content"></div>
+    <div class="dialog-actions">
+      <button class="button button-secondary" data-close-dialog="travelerDialog">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Alert details dialog -->
+  <dialog class="app-dialog" id="alertDialog">
+    <div class="dialog-heading">
+      <div><p class="eyebrow">ALERT MANAGEMENT</p><h2>Alert Details</h2></div>
+      <button class="icon-button" data-close-dialog="alertDialog" aria-label="Close dialog">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div id="alertDialogContent" class="dialog-content"></div>
+    <div class="dialog-actions">
+      <button class="button button-secondary" data-close-dialog="alertDialog">Close</button>
+      <button class="button button-primary" id="resolveAlertButton">Mark as resolved</button>
+    </div>
+  </dialog>
+
+  <!-- General information dialog -->
+  <dialog class="app-dialog" id="infoDialog">
+    <div class="dialog-heading">
+      <div><p class="eyebrow">TRAVEL NEXUS</p><h2 id="infoDialogTitle">Information</h2></div>
+      <button class="icon-button" data-close-dialog="infoDialog" aria-label="Close dialog">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div id="infoDialogContent" class="dialog-content"></div>
+    <div class="dialog-actions">
+      <button class="button button-primary" data-close-dialog="infoDialog">Got it</button>
+    </div>
+  </dialog>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
+  <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
+  <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../Traveller_Module/js/supabase-client.js"></script>
+  <script>window.initializeSupabaseClient();</script>
+  <script src="../js/dashboard-auth.js"></script>
+  <script src="../js/authority.js?v=geofence-risk-1"></script>
+</body>
+</html>

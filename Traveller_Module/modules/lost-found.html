@@ -1,0 +1,75 @@
+<section class="page-section lost-found-module" id="lost-found">
+  <header class="page-header">
+    <div class="page-title">
+      <h1>Lost &amp; Found</h1>
+      <p>Report an item or browse reports shared by travellers and the authority.</p>
+    </div>
+    <button class="primary-button" id="addItemButton" type="button"><i class="fa-solid fa-plus"></i> Report an Item</button>
+  </header>
+
+  <div class="lf-stats" aria-label="Lost and found statistics">
+    <article><span>Total reports</span><strong id="totalReports">0</strong></article>
+    <article><span>Lost items</span><strong id="lostCount">0</strong></article>
+    <article><span>Found items</span><strong id="foundCount">0</strong></article>
+    <article><span>Resolved</span><strong id="resolvedCount">0</strong></article>
+  </div>
+
+  <section class="content-card lf-workspace">
+    <div class="lf-toolbar">
+      <input id="searchInput" type="search" placeholder="Search item, location, reporter…" aria-label="Search reports">
+      <select id="typeFilter" aria-label="Filter by report type">
+        <option value="all">All report types</option><option value="Lost">Lost items</option><option value="Found">Found items</option>
+      </select>
+      <select id="statusFilter" aria-label="Filter by status">
+        <option value="all">All statuses</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option>
+      </select>
+      <button class="secondary-button" id="resetFiltersButton" type="button">Reset filters</button>
+    </div>
+    <div class="lf-categories" id="categoryChips">
+      <button class="category-chip active" data-category="all" type="button">All items</button>
+      <button class="category-chip" data-category="Electronics" type="button">Electronics</button>
+      <button class="category-chip" data-category="Bags" type="button">Bags</button>
+      <button class="category-chip" data-category="Documents" type="button">Documents</button>
+      <button class="category-chip" data-category="Accessories" type="button">Accessories</button>
+      <button class="category-chip" data-category="Clothing" type="button">Clothing</button>
+      <button class="category-chip" data-category="Other" type="button">Other</button>
+    </div>
+    <div class="lf-list-heading"><div><h2>Shared reports</h2><p id="resultsText">Loading reports…</p></div></div>
+    <div class="items-grid" id="itemsGrid"></div>
+    <div class="empty-state" id="emptyState" hidden>
+      <h3>No reports found</h3><p>Try changing your filters or submit a new report.</p>
+      <button class="primary-button" id="emptyAddButton" type="button">Report an Item</button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" id="itemModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><h2 id="modalTitle">Report an Item</h2><p>Reports are visible to signed-in travellers and the authority.</p></div>
+        <button class="icon-button" data-close-modal type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="itemForm">
+        <input id="editItemId" type="hidden">
+        <div class="form-grid">
+          <label class="form-field full-width">Item name *<input id="itemName" required maxlength="100" placeholder="e.g. Black backpack"></label>
+          <label class="form-field">Report type *<select id="itemType" required><option value="Lost">Lost item</option><option value="Found">Found item</option></select></label>
+          <label class="form-field">Category *<select id="itemCategory" required><option>Electronics</option><option>Bags</option><option>Documents</option><option>Accessories</option><option>Clothing</option><option>Other</option></select></label>
+          <label class="form-field full-width">Location *<input id="itemLocation" required maxlength="150" placeholder="Where was it lost or found?"></label>
+          <label class="form-field">Reporter name *<input id="reporterName" required maxlength="100" placeholder="Your name"></label>
+          <label class="form-field">Report date *<input id="reportDate" type="date" required></label>
+          <label class="form-field">Reference / contact (optional)<input id="itemReference" maxlength="100" placeholder="Optional contact"></label>
+          <label class="form-field full-width">Description<textarea id="itemDescription" rows="3" maxlength="500" placeholder="Colour, brand, or identifying details"></textarea></label>
+        </div>
+        <div class="modal-actions"><button class="secondary-button" data-close-modal type="button">Cancel</button><button class="primary-button" id="saveItemButton" type="submit"><i class="fa-solid fa-check"></i> Save Report</button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="detailsModal" hidden>
+    <section class="modal details-modal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+      <div class="modal-header"><div><h2 id="detailsTitle">Item Details</h2><p>Shared Lost &amp; Found report</p></div><button class="icon-button" data-close-modal type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+      <div id="detailsContent" class="details-content"></div>
+      <div class="modal-actions"><button class="secondary-button" data-close-modal type="button">Close</button></div>
+    </section>
+  </div>
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+</section>
