@@ -23,16 +23,20 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6bq40yocu-#psh%k_8(o)4a0j4pim_a6!aln4gifoe=n2up@6$'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-local-development-only-change-before-deployment')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'true').lower() == 'true'
 
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "10.221.238.192",
 ]
+ALLOWED_HOSTS.extend(host.strip() for host in os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',') if host.strip())
+render_hostname = os.getenv('RENDER_EXTERNAL_HOSTNAME', '').strip()
+if render_hostname:
+    ALLOWED_HOSTS.append(render_hostname)
 
 
 # Application definition
@@ -185,8 +189,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5501",
     "http://localhost:5501",
 ]
+CORS_ALLOWED_ORIGINS.extend(origin.strip().rstrip('/') for origin in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if origin.strip())
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5501",
     "http://localhost:5501",
 ]
+CSRF_TRUSTED_ORIGINS.extend(origin.strip().rstrip('/') for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin.strip())
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
