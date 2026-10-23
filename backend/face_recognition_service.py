@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import json
 import logging
 import os
@@ -25,10 +26,20 @@ MODEL_NAME = os.getenv("FACE_MODEL_NAME", "Facenet")
 MATCH_THRESHOLD = float(os.getenv("FACE_MATCH_THRESHOLD", "0.90"))
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_CASES_PER_SYNC = 250
+SERVICE_API_KEY = os.getenv("FACE_SERVICE_API_KEY", "")
 
 app = Flask(__name__)
 known_embeddings = {}
 embeddings_lock = threading.RLock()
+
+
+def service_key_required():
+    supplied = request.headers.get("X-Face-Service-Key", "")
+    if not SERVICE_API_KEY and os.getenv("RENDER") != "true":
+        return None
+    if not SERVICE_API_KEY or not hmac.compare_digest(supplied, SERVICE_API_KEY):
+        return jsonify({"success": False, "error": "Unauthorized service request."}), 401
+    return None
 
 
 class NoFaceDetected(Exception):
@@ -79,6 +90,9 @@ def health():
 
 @app.post("/sync")
 def sync_cases():
+    denied = service_key_required()
+    if denied:
+        return denied
     manifest = request.form.get("reports", "")
     try:
         reports = json.loads(manifest)
@@ -163,6 +177,9 @@ def sync_cases():
 
 @app.post("/recognize")
 def recognize():
+    denied = service_key_required()
+    if denied:
+        return denied
     upload = request.files.get("image")
     if upload is None:
         return jsonify({"success": False, "error": "A camera frame is required."}), 400

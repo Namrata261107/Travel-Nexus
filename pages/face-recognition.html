@@ -13,7 +13,7 @@
   <script src="../js/api-config.js"></script>
 </head>
 
-<body>
+<body data-required-role="authority">
   <header class="topbar">
     <a href="authority.html" class="brand">
       <div class="brand-logo"><i class="fa-solid fa-compass"></i></div>
@@ -135,6 +135,17 @@
     </section>
   </main>
 
-  <script src="../js/face-recognition.js?v=face-cases-4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../Traveller_Module/js/supabase-client.js"></script>
+  <script>window.initializeSupabaseClient();</script>
+  <script src="../js/dashboard-auth.js"></script>
+  <script>
+    window.travelNexusAuthReady.then(authenticated => {
+      if (!authenticated) return;
+      const script = document.createElement("script");
+      script.src = "../js/face-recognition.js?v=face-auth-1";
+      document.body.appendChild(script);
+    });
+  </script>
 </body>
 </html>

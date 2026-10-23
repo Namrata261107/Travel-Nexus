@@ -154,6 +154,7 @@ FACE_RECOGNITION_SERVICE_URL = os.getenv(
     'FACE_RECOGNITION_SERVICE_URL',
     'http://127.0.0.1:8001',
 )
+FACE_SERVICE_API_KEY = os.getenv('FACE_SERVICE_API_KEY', '')
 SUPABASE_URL = os.getenv(
     'SUPABASE_URL',
     'https://llmatewekilkgnccwwqk.supabase.co',

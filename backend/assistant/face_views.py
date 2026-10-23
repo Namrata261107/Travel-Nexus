@@ -1,5 +1,4 @@
 import json
-import ipaddress
 import logging
 import time
 import urllib.error
@@ -8,17 +7,20 @@ import uuid
 from io import BytesIO
 
 from django.conf import settings
+from django.db import connection
 from django.http import FileResponse, JsonResponse
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 from PIL import Image, UnidentifiedImageError
 
 from .models import FaceCase, FaceDetection
+from .auth_views import _verified_user
 
 logger = logging.getLogger(__name__)
 FACE_SERVICE_URL = getattr(
     settings, "FACE_RECOGNITION_SERVICE_URL", "http://127.0.0.1:8001"
 ).rstrip("/")
+FACE_SERVICE_API_KEY = getattr(settings, "FACE_SERVICE_API_KEY", "")
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MATCH_CONFIRMATION_SECONDS = 2.5
 DETECTION_COOLDOWN_SECONDS = 45
@@ -26,18 +28,40 @@ active_match_since = {}
 last_detection_at = {}
 
 
-def local_access_required(request):
-    remote_addr = request.META.get("REMOTE_ADDR", "")
+def face_access_required(request, allowed_roles=("authority", "admin")):
+    user, error_response = _verified_user(request)
+    if error_response:
+        return error_response
+
     try:
-        is_local = ipaddress.ip_address(remote_addr).is_loopback
-    except ValueError:
-        is_local = False
-    if not is_local:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT role FROM public.profiles WHERE id = %s", [user["id"]])
+            profile = cursor.fetchone()
+    except Exception:
+        logger.exception("Could not verify the face-report user's role.")
         return JsonResponse({
             "success": False,
-            "error": "Face reports can only be accessed from this computer.",
+            "error": "Could not verify your authority permissions.",
+        }, status=503)
+
+    role = str(profile[0]).lower() if profile else ""
+    if role not in allowed_roles:
+        return JsonResponse({
+            "success": False,
+            "error": "This action is available to authorized authority accounts only.",
         }, status=403)
+
+    request.face_user_id = str(user["id"])
     return None
+
+
+def face_service_headers(boundary):
+    if not FACE_SERVICE_API_KEY and not settings.DEBUG:
+        raise RuntimeError("Face recognition service authentication is not configured.")
+    headers = {"Content-Type": f"multipart/form-data; boundary={boundary}"}
+    if FACE_SERVICE_API_KEY:
+        headers["X-Face-Service-Key"] = FACE_SERVICE_API_KEY
+    return headers
 
 
 def validate_image(upload):
@@ -137,10 +161,10 @@ def post_multipart(url, fields, files, timeout=90):
         return json.loads(response.read().decode("utf-8"))
 
 
-@ensure_csrf_cookie
-@csrf_protect
+@csrf_exempt
 def face_cases(request):
-    denied = local_access_required(request)
+    roles = ("traveler", "authority", "admin") if request.method == "GET" else ("authority", "admin")
+    denied = face_access_required(request, roles)
     if denied:
         return denied
 
@@ -189,7 +213,7 @@ def face_cases(request):
         photo=photo.read(),
         photo_name=photo.name[:255],
         photo_content_type=photo.content_type or "application/octet-stream",
-        created_by=request.user if request.user.is_authenticated else None,
+        created_by=None,
     )
     return JsonResponse({
         "success": True,
@@ -198,12 +222,16 @@ def face_cases(request):
     }, status=201)
 
 
-@ensure_csrf_cookie
-@csrf_protect
+@csrf_exempt
 def prepare_face_recognition(request):
-    denied = local_access_required(request)
+    denied = face_access_required(request)
     if denied:
         return denied
+    if not FACE_SERVICE_API_KEY and not settings.DEBUG:
+        return JsonResponse({
+            "success": False,
+            "error": "Face recognition service authentication is not configured.",
+        }, status=503)
     if request.method != "POST":
         return JsonResponse(
             {"success": False, "error": "Method not allowed."},
@@ -247,7 +275,7 @@ def prepare_face_recognition(request):
     service_request = urllib.request.Request(
         f"{FACE_SERVICE_URL}/sync",
         data=b"".join(parts),
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+        headers=face_service_headers(boundary),
         method="POST",
     )
     try:
@@ -257,7 +285,7 @@ def prepare_face_recognition(request):
         logger.exception("Face recognition service could not prepare reference photos.")
         return JsonResponse({
             "success": False,
-            "error": "Face recognition service is not ready. Start it on port 8001 and try again.",
+            "error": "Face recognition service is unavailable. Check its deployment and try again.",
         }, status=503)
 
     if not result.get("success"):
@@ -272,12 +300,16 @@ def prepare_face_recognition(request):
     })
 
 
-@ensure_csrf_cookie
-@csrf_protect
+@csrf_exempt
 def face_recognition_scan(request):
-    denied = local_access_required(request)
+    denied = face_access_required(request)
     if denied:
         return denied
+    if not FACE_SERVICE_API_KEY and not settings.DEBUG:
+        return JsonResponse({
+            "success": False,
+            "error": "Face recognition service authentication is not configured.",
+        }, status=503)
     if request.method != "POST":
         return JsonResponse(
             {"success": False, "error": "Method not allowed."},
@@ -306,7 +338,7 @@ def face_recognition_scan(request):
     service_request = urllib.request.Request(
         f"{FACE_SERVICE_URL}/recognize",
         data=payload,
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+        headers=face_service_headers(boundary),
         method="POST",
     )
     try:
@@ -326,7 +358,7 @@ def face_recognition_scan(request):
 
     match = result.get("match")
     if not isinstance(match, dict):
-        active_match_since.pop(request.user.pk, None)
+        active_match_since.pop(request.face_user_id, None)
         return JsonResponse({
             "success": True,
             "match": None,
@@ -338,7 +370,7 @@ def face_recognition_scan(request):
         similarity_score = float(match["similarity_score"])
     except (FaceCase.DoesNotExist, KeyError, TypeError, ValueError):
         logger.warning("Recognizer returned an invalid face report match.")
-        active_match_since.pop(request.user.pk, None)
+        active_match_since.pop(request.face_user_id, None)
         return JsonResponse({
             "success": True,
             "match": None,
@@ -351,16 +383,16 @@ def face_recognition_scan(request):
         }, status=502)
 
     now = time.monotonic()
-    active = active_match_since.get(request.user.pk)
+    active = active_match_since.get(request.face_user_id)
     if active is None or active["report_id"] != report.id:
-        active_match_since[request.user.pk] = {
+        active_match_since[request.face_user_id] = {
             "report_id": report.id,
             "first_seen": now,
         }
-        active = active_match_since[request.user.pk]
+        active = active_match_since[request.face_user_id]
 
     detection = None
-    cooldown_key = (request.user.pk, report.id)
+    cooldown_key = (request.face_user_id, report.id)
     last_captured = last_detection_at.get(cooldown_key, 0)
     stable_for = now - active["first_seen"]
     if (
@@ -417,10 +449,9 @@ def parse_coordinate(value, minimum, maximum):
     return coordinate
 
 
-@ensure_csrf_cookie
-@csrf_protect
+@csrf_exempt
 def face_detections(request):
-    denied = local_access_required(request)
+    denied = face_access_required(request)
     if denied:
         return denied
     if request.method != "GET":
@@ -439,10 +470,9 @@ def face_detections(request):
     })
 
 
-@ensure_csrf_cookie
-@csrf_protect
+@csrf_exempt
 def face_report_photo(request, report_id):
-    denied = local_access_required(request)
+    denied = face_access_required(request, ("traveler", "authority", "admin"))
     if denied:
         return denied
     try:
@@ -462,10 +492,9 @@ def face_report_photo(request, report_id):
         return JsonResponse({"success": False, "error": "Report photo is unavailable."}, status=503)
 
 
-@ensure_csrf_cookie
-@csrf_protect
+@csrf_exempt
 def face_detection_photo(request, detection_id):
-    denied = local_access_required(request)
+    denied = face_access_required(request)
     if denied:
         return denied
     try:

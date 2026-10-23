@@ -11,11 +11,15 @@ function escapePersonReportText(value) {
 
 async function loadPersonReports() {
     if (!personReportList) return;
+    personReportList.querySelectorAll("img").forEach(image => {
+        if (image.src.startsWith("blob:")) URL.revokeObjectURL(image.src);
+    });
     personReportList.innerHTML = '<div class="content-card person-reports-loading"><span class="report-loader"></span><p>Loading authority safety reports…</p></div>';
     try {
+        const token = await window.travelNexusAuth.getAccessToken();
         const response = await fetch(PERSON_REPORTS_URL, {
             cache: "no-store",
-            headers: { Accept: "application/json" }
+            headers: { Accept: "application/json", Authorization: `Bearer ${token}` }
         });
         const result = await response.json();
         if (!response.ok || !result.success || !Array.isArray(result.cases)) {
@@ -25,8 +29,23 @@ async function loadPersonReports() {
             personReportList.innerHTML = '<div class="content-card person-reports-empty"><span><i class="fa-solid fa-clipboard-check"></i></span><h2>No active notices</h2><p>The Authority has no active missing-person or suspicious-person reports to share right now.</p></div>';
             return;
         }
-        personReportList.innerHTML = result.cases.map(report => {
-            const photo = /^https?:\/\//i.test(report.reference_photo || "") ? report.reference_photo : "";
+        const reports = await Promise.all(result.cases.map(async report => {
+            let photo = "";
+            if (/^https?:\/\//i.test(report.reference_photo || "")) {
+                try {
+                    const imageResponse = await fetch(report.reference_photo, {
+                        cache: "no-store",
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (imageResponse.ok) photo = URL.createObjectURL(await imageResponse.blob());
+                } catch (error) {
+                    console.warn("Could not load an authority report photo.", error);
+                }
+            }
+            return { ...report, photo };
+        }));
+        personReportList.innerHTML = reports.map(report => {
+            const photo = report.photo;
             const type = String(report.report_type || "other").toLowerCase().replace(/[^a-z0-9-]/g, "");
             const date = report.created_at ? new Date(report.created_at).toLocaleDateString() : "Date unavailable";
             const name = escapePersonReportText(report.name || "Name unavailable");

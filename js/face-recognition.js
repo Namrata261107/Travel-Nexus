@@ -23,7 +23,6 @@ const state = {
   request: null,
   isStarting: false,
   isScanning: false,
-  csrfToken: "",
   location: null,
   locationRequested: false,
   notifiedMatchId: null
@@ -39,10 +38,8 @@ document.getElementById("refreshFaceDataBtn").addEventListener("click", refreshF
 async function apiFetch(path, options = {}) {
   const headers = new Headers(options.headers || {});
   headers.set("Accept", "application/json");
-  if (options.method && options.method !== "GET") {
-    await ensureCsrfToken();
-    headers.set("X-CSRFToken", state.csrfToken);
-  }
+  const token = await window.travelNexusAuth.getAccessToken();
+  headers.set("Authorization", `Bearer ${token}`);
 
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
@@ -62,23 +59,14 @@ async function apiFetch(path, options = {}) {
   return data;
 }
 
-async function ensureCsrfToken() {
-  if (state.csrfToken) return;
-  await apiFetch("/cases/", { method: "GET" })
-    .then(() => {});
-  state.csrfToken = readCookie("csrftoken");
-  if (!state.csrfToken) {
-    throw new Error("Could not obtain a security token. Reload the page and try again.");
-  }
-}
-
-function readCookie(name) {
-  const prefix = `${name}=`;
-  const cookie = document.cookie
-    .split(";")
-    .map(value => value.trim())
-    .find(value => value.startsWith(prefix));
-  return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : "";
+async function privatePhotoUrl(url) {
+  const token = await window.travelNexusAuth.getAccessToken();
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store"
+  });
+  if (!response.ok) throw new Error(`Could not load photo (HTTP ${response.status}).`);
+  return URL.createObjectURL(await response.blob());
 }
 
 async function refreshFaceData() {
@@ -89,7 +77,7 @@ async function loadCases() {
   casesStatus.textContent = "Loading reports...";
   try {
     const data = await apiFetch("/cases/");
-    renderCases(data.cases || []);
+    await renderCases(data.cases || []);
   } catch (error) {
     casesStatus.textContent = error.message;
     casesGrid.replaceChildren();
@@ -98,17 +86,18 @@ async function loadCases() {
   }
 }
 
-function renderCases(cases) {
+async function renderCases(cases) {
   casesGrid.replaceChildren();
   toggleButton.disabled = false;
   casesStatus.textContent = cases.length
     ? `${cases.length} active report${cases.length === 1 ? "" : "s"}`
     : "No active reports yet. Create a person report to enable matching.";
-  cases.forEach(report => {
+  for (const report of cases) {
     const card = document.createElement("article");
     card.className = "face-record-card";
     const image = document.createElement("img");
-    image.src = report.reference_photo;
+    try { image.src = await privatePhotoUrl(report.reference_photo); }
+    catch (error) { image.alt = `${report.name} reference image is unavailable.`; }
     image.alt = `Reference photo for ${report.name}`;
     image.loading = "lazy";
     const details = document.createElement("div");
@@ -123,30 +112,31 @@ function renderCases(cases) {
     details.append(title, type, description);
     card.append(image, details);
     casesGrid.appendChild(card);
-  });
+  }
 }
 
 async function loadDetections() {
   detectionsStatus.textContent = "Loading detections...";
   try {
     const data = await apiFetch("/detections/");
-    renderDetections(data.detections || []);
+    await renderDetections(data.detections || []);
   } catch (error) {
     detectionsStatus.textContent = error.message;
     detectionsGrid.replaceChildren();
   }
 }
 
-function renderDetections(detections) {
+async function renderDetections(detections) {
   detectionsGrid.replaceChildren();
   detectionsStatus.textContent = detections.length
     ? `${detections.length} detection${detections.length === 1 ? "" : "s"}`
     : "No potential matches have been recorded.";
-  detections.forEach(detection => {
+  for (const detection of detections) {
     const card = document.createElement("article");
     card.className = "face-record-card detection-record-card";
     const image = document.createElement("img");
-    image.src = detection.captured_photo;
+    try { image.src = await privatePhotoUrl(detection.captured_photo); }
+    catch (error) { image.alt = `${detection.name} capture is unavailable.`; }
     image.alt = `Camera capture of potential match for ${detection.name}`;
     image.loading = "lazy";
     const details = document.createElement("div");
@@ -173,7 +163,7 @@ function renderDetections(detections) {
     details.append(title, type, timestamp, score, location, review);
     card.append(image, details);
     detectionsGrid.appendChild(card);
-  });
+  }
 }
 
 async function saveFaceReport(event) {
