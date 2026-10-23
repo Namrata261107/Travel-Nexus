@@ -24,9 +24,10 @@
 .face-recognition-toasts {
   position: fixed;
   z-index: 10000;
-  right: 24px;
-  bottom: 24px;
+  top: 82px;
+  left: 50%;
   width: min(420px, calc(100vw - 32px));
+  transform: translateX(-50%);
 }
 
 .face-recognition-toast {

@@ -251,7 +251,7 @@ async function startCamera() {
     setCameraStatus(
       `Camera is live. ${state.referenceDescriptors.length} reference photo(s) ready. ` +
       (skipped ? `${skipped} photo(s) were skipped. ` : "") +
-      "Matching runs in this browser; a potential match must remain visible for about 3 seconds."
+      "Matching runs in this browser."
     );
     scanFrame();
   } catch (error) {
@@ -381,9 +381,8 @@ async function handleBrowserMatch(match) {
       `${match.report.name} — ${match.report.report_type_label}. Automated recognition can be wrong; verify independently.`
     );
   }
-  const remaining = Math.max(0, MATCH_CONFIRMATION_MS - (now - state.matchSince.since));
-  if (remaining > 0) {
-    setCameraStatus(`Potential match: ${match.report.name}. Keep the face in view for ${Math.ceil(remaining / 1000)} more second(s).`);
+  if (now - state.matchSince.since < MATCH_CONFIRMATION_MS) {
+    setCameraStatus(`Potential match detected: ${match.report.name}.`);
     return;
   }
   const lastCaptured = state.lastCapturedAt.get(reportId) || 0;
@@ -392,7 +391,7 @@ async function handleBrowserMatch(match) {
     return;
   }
 
-  setCameraStatus(`Saving a potential match for ${match.report.name} for human review...`);
+  setCameraStatus("Saving potential match for review...");
   const canvas = document.createElement("canvas");
   const scale = Math.min(1, MAX_FRAME_WIDTH / video.videoWidth);
   canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
