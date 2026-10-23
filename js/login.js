@@ -1,7 +1,7 @@
 "use strict";
 
 const db = window.travelNexusSupabase;
-const BOOTSTRAP_API = "http://127.0.0.1:8000/api/authority/auth/bootstrap/";
+const BOOTSTRAP_API = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/auth/bootstrap/";
 let selectedRole = "traveler";
 
 function element(id) {

@@ -383,7 +383,7 @@ async function loadTravelNexusAlertsFromSupabase() {
                 await window.travelNexusAuth.getAccessToken();
             if (!token) throw new Error("Sign in to load your geofence notifications.");
             const response = await fetch(
-                "http://127.0.0.1:8000/api/authority/traveler/geofence-alerts/",
+                window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/traveler/geofence-alerts/",
                 {
                     cache: "no-store",
                     headers: {

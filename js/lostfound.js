@@ -16,7 +16,7 @@ function initializeLostFoundModule() {
   // AUTHENTICATED DATABASE API
   // =======================================================
 
-  const REPORTS_API = "http://127.0.0.1:8000/api/authority/lost-found/reports/";
+  const REPORTS_API = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/lost-found/reports/";
   let items = [];
   let selectedCategory = "all";
   let editingId = null;

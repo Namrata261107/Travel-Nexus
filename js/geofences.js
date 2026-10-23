@@ -6,7 +6,7 @@
    ========================================================= */
 
 const GEOFENCES_API_URL =
-    "http://127.0.0.1:8000/api/authority/geofences/";
+    window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/geofences/";
 
 const ACTIVITY_STORAGE_KEY = "travelNexusGeofenceActivity";
 const RULES_STORAGE_KEY = "travelNexusGeofenceRules";

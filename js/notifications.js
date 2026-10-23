@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const API_URL = "http://127.0.0.1:8000/api/authority/alerts/";
+  const API_URL = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/alerts/";
   let loading = false;
 
   function initializeNotifications() {

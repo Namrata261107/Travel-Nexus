@@ -1,6 +1,6 @@
 "use strict";
 
-const API_BASE = "http://127.0.0.1:8000/api/authority/face";
+const API_BASE = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/face";
 const FRAME_INTERVAL_MS = 1800;
 const MAX_FRAME_WIDTH = 960;
 

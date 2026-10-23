@@ -664,7 +664,7 @@ let authorityGeofenceLayers = [];
 async function loadAuthorityGeofences() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/api/authority/geofences/",
+            window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/geofences/",
             { cache: "no-store", headers: { Accept: "application/json" } }
         );
         const result = await response.json();

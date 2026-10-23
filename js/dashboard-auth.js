@@ -1,7 +1,7 @@
 "use strict";
 
 const authClient = window.travelNexusSupabase;
-const authApi = "http://127.0.0.1:8000/api/authority/auth/bootstrap/";
+const authApi = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/auth/bootstrap/";
 const currentScriptUrl = document.currentScript?.src || window.location.href;
 const workspaceRoot = new URL("../", currentScriptUrl);
 

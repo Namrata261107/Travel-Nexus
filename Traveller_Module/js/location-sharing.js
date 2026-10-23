@@ -1,7 +1,7 @@
 "use strict";
 
-const TRAVELER_LOCATION_API = "http://127.0.0.1:8000/api/authority/traveler/location/";
-const TRAVELER_GEOFENCES_API = "http://127.0.0.1:8000/api/authority/geofences/";
+const TRAVELER_LOCATION_API = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/traveler/location/";
+const TRAVELER_GEOFENCES_API = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/geofences/";
 const locationMapElement = document.getElementById("travelerDashboardMap");
 const shareLocationButton = document.getElementById("startLocationButton");
 const stopLocationButton = document.getElementById("stopLocationButton");

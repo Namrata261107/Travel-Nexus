@@ -1,6 +1,6 @@
 "use strict";
 
-const PERSON_REPORTS_URL = "http://127.0.0.1:8000/api/authority/face/cases/";
+const PERSON_REPORTS_URL = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/face/cases/";
 const personReportList = document.getElementById("personReportList");
 
 function escapePersonReportText(value) {

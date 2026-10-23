@@ -5,7 +5,7 @@
    TRAVEL NEXUS - AUTHORITY DASHBOARD
    ========================================= */
 
-const DASHBOARD_API = "http://127.0.0.1:8000/api/authority";
+const DASHBOARD_API = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority";
 const travelers = [];
 const alerts = [];
 const geofences = [];
@@ -144,7 +144,7 @@ async function updateStatistics() {
 
   try {
     const response = await fetch(
-      "http://127.0.0.1:8000/api/authority/dashboard-summary/"
+      window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/dashboard-summary/"
     );
 
     if (!response.ok) {

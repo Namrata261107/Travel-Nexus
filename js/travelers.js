@@ -1,7 +1,7 @@
 (() => {
     "use strict";
 
-    const API_URL = "http://127.0.0.1:8000/api/authority/travelers/";
+    const API_URL = window.TRAVEL_NEXUS_API_ORIGIN + "/api/authority/travelers/";
 
     // Store traveler data
     let travelers = [];
