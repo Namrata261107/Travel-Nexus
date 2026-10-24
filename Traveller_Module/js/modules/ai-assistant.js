@@ -4,8 +4,7 @@
 ===================================================== */
 
 (function () {
-    // Keep the chat history while the page is open.
-    let chatHistory = [];
+    const API_URL = `${window.TRAVEL_NEXUS_API_ORIGIN || "http://127.0.0.1:8000"}/api/traveler/ai-chat/`;
 
     // Prevent duplicate event registration.
     let initialized = false;
@@ -66,9 +65,6 @@
             `
         );
 
-        // Start a fresh conversation each time the chat is opened.
-        chatHistory = [];
-
         setTimeout(function () {
             const input = document.getElementById("chatInput");
             const sendButton =
@@ -94,7 +90,7 @@
         }, 100);
     };
 
-    // Send a message to the Python backend.
+    // Send a message to the shared Django API used by the rest of the app.
     window.sendChatMessage = async function () {
         const input = document.getElementById("chatInput");
         const messagesElement =
@@ -136,26 +132,21 @@
 
         messagesElement.scrollTop = messagesElement.scrollHeight;
 
-        chatHistory.push({
-            role: "user",
-            content: question
-        });
-
         try {
-            const response = await fetch(
-                "http://127.0.0.1:5000/chat",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        messages: chatHistory.slice(-20)
-                    })
-                }
-            );
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: question })
+            });
 
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch {
+                throw new Error(`The server returned an unexpected response (${response.status}).`);
+            }
 
             if (!response.ok) {
                 throw new Error(
@@ -163,28 +154,19 @@
                 );
             }
 
-            if (typeof data.reply !== "string" || !data.reply.trim()) {
+            if (data.success !== true || typeof data.reply !== "string" || !data.reply.trim()) {
                 throw new Error("The AI returned an empty response.");
             }
 
             const answer = data.reply.trim();
-
-            chatHistory.push({
-                role: "assistant",
-                content: answer
-            });
-
             botBubble.textContent = answer;
 
         } catch (error) {
             console.error("Travel Nexus AI error:", error);
 
-            // Remove the failed question from conversation history.
-            chatHistory.pop();
-
             botBubble.textContent =
                 "Sorry, I couldn't get a response. " +
-                "Please check that Ollama and the Python backend are running.";
+                (error.message || "Please check the Travel Nexus API and try again.");
 
         } finally {
             input.disabled = false;
